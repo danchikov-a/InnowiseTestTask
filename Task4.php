@@ -4,7 +4,7 @@ namespace src;
 
 class Task4
 {
-    public function transformString(string $inputString): string
+    public function main(string $inputString): string
     {
         $separators = ['-', '_', ' '];
 
