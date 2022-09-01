@@ -30,7 +30,7 @@ class Task5
         $length2 = strlen($number2) - 1;
         $maxLength = max($length1, $length2);
         $inMemory = 0;
-        $result = "";
+        $result = '';
 
         for ($i = 0; $i <= $maxLength; $i++) {
             $op1 = $i <= $length1 ? $number1[$length1 - $i] : 0;
