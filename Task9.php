@@ -6,8 +6,8 @@ use InvalidArgumentException;
 
 class Task9
 {
-    const AMOUNT_OF_NUMBERS = 3;
-    const RETURN_FORMAT = "%s + %s + %s = %s";
+    public const AMOUNT_OF_NUMBERS = 3;
+    public const RETURN_FORMAT = '%s + %s + %s = %s';
 
     public function main(array $arr, int $number): array
     {
