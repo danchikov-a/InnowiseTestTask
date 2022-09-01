@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 class Task2
 {
-    public const SEPARATOR = ".";
+    public const SEPARATOR = '.';
     public const SECONDS_IN_DAY = 86400;
     public const AMOUNT_OF_DATE_COMPONENTS = 3;
 
