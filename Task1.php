@@ -19,6 +19,6 @@ class Task1
                     ? self::MORE_THAN_10_TEXT
                     : self::EQUAL_OR_LESS_THAT_10_TEXT));
 
-        return $result . "\n";
+        return $result;
     }
 }
