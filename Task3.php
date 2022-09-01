@@ -17,7 +17,7 @@ class Task3
                     $number = (int)$number / 10;
                 } while ($number);
 
-                $number  = $sum;
+                $number = $sum;
             } while ($number > 9);
 
             return $sum;
