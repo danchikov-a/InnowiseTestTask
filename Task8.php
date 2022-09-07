@@ -12,7 +12,7 @@ class Task8
 
         if ($jsonObject != null) {
             return sprintf(
-                "Title : %s\nAuthor : %s\nPublisher :%s",
+                "Title: %s\nAuthor: %s\nPublisher: %s",
                 $jsonObject->Title,
                 $jsonObject->Author,
                 $jsonObject->Detail->Publisher
