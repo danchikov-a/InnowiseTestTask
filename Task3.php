@@ -6,9 +6,9 @@ use InvalidArgumentException;
 
 class Task3
 {
-    public function main(int $number): int
+    public function main($number): int
     {
-        if ($number > 0) {
+        if (is_int($number) && $number > 9) {
             do {
                 $sum = 0;
 
