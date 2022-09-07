@@ -8,7 +8,7 @@ class Task7
 {
     public function main(array $arr, int $position): array
     {
-        if ($position >= 0) {
+        if ($position >= 0 && $position < count($arr)) {
             unset($arr[$position]);
             $newArray = [];
 
