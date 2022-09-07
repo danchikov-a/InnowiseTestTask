@@ -15,7 +15,7 @@ class Task6
             $amount = 0;
 
             for ($currentYear = $year; $currentYear <= $lastYear; $currentYear++) {
-                for ($currentMonth = $month;
+                for ($currentMonth = $currentYear == $year ? $month : 1;
                     $currentMonth <= self::MONTHS && !($currentYear == $lastYear && $currentMonth == $lastMonth);
                     $currentMonth++) {
                     $firstDayOfMonth = date('w', strtotime("01.$currentMonth.$currentYear"));
