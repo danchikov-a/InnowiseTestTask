@@ -6,6 +6,7 @@ class Task12
 {
     private $number1;
     private $number2;
+    private $result;
 
     public function __construct(int $number1, int $number2)
     {
@@ -15,26 +16,30 @@ class Task12
 
     public function add(): Task12
     {
-        return new Task12($this->number1 + $this->number2, null);
+        $this->result = $this->number1 + $this->number2;
+        return $this;
     }
 
     public function subtract(): Task12
     {
-        return new Task12($this->number1 - $this->number2, null);
+        $this->result = $this->number1 - $this->number2;
+        return $this;
     }
 
     public function multiply(): Task12
     {
-        return new Task12($this->number1 * $this->number2, null);
+        $this->result = $this->number1 * $this->number2;
+        return $this;
     }
 
-    public function divideBy($divider): int
+    public function divideBy($divider): Task12
     {
-        return $this->number1 / $divider;
+        $this->result = $this->result / $divider;
+        return $this;
     }
 
     public function __toString(): string
     {
-        return $this->number1;
+        return $this->result;
     }
 }
