@@ -20,7 +20,13 @@ class Task2
             $years = $dateComponents[2];
 
             if (checkdate($months, $days, $years)) {
-                return (int)((time() - strtotime($date)) / self::SECONDS_IN_DAY);
+                $time = mktime(0, 0, 0, $months, $days, date('Y'));
+
+                if ($time < time()) {
+                    $time = mktime(0, 0, 0, $months, $days, date('Y') + 1);
+                }
+
+                return intval(($time - time()) / self::SECONDS_IN_DAY) + 1;
             } else {
                 throw new InvalidArgumentException();
             }
