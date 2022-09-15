@@ -2,6 +2,8 @@
 
 namespace src;
 
+use InvalidArgumentException;
+
 class Task12
 {
     private $number1;
@@ -37,9 +39,24 @@ class Task12
 
     public function divideBy($divider): Task12
     {
-        $this->result = $this->result / $divider;
+        if ($divider != 0) {
+            $this->result = $this->result / $divider;
 
-        return $this;
+            return $this;
+        } else {
+            throw new InvalidArgumentException();
+        }
+    }
+
+    public function divide(): Task12
+    {
+        if ($this->number2 != 0) {
+            $this->result = $this->number1 / $this->number2;
+
+            return $this;
+        } else {
+            throw new InvalidArgumentException();
+        }
     }
 
     public function __toString(): string
