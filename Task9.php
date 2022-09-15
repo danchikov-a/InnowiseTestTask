@@ -11,7 +11,7 @@ class Task9
 
     public function main(array $arr, int $number): array
     {
-        if (count($arr) >= self::AMOUNT_OF_NUMBERS && !$this->isHasNegativeNumbers($arr)) {
+        if (count($arr) >= self::AMOUNT_OF_NUMBERS && !$this->isHasNegativeNumbers($arr) && $number > 0) {
             $result = [];
             $length = count($arr) - self::AMOUNT_OF_NUMBERS;
 
