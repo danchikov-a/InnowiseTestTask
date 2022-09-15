@@ -9,6 +9,7 @@ class Task2
     public const SEPARATOR = '-';
     public const SECONDS_IN_DAY = 86400;
     public const AMOUNT_OF_DATE_COMPONENTS = 3;
+    public const DAYS_IN_YEAR = 365;
 
     public function main(string $date): int
     {
@@ -26,7 +27,13 @@ class Task2
                     $time = mktime(0, 0, 0, $months, $days, date('Y') + 1);
                 }
 
-                return intval(($time - time()) / self::SECONDS_IN_DAY) + 1;
+                $amountOfDays = intval(($time - time()) / self::SECONDS_IN_DAY) + 1;
+
+                if ($amountOfDays == self::DAYS_IN_YEAR) {
+                    return 0;
+                } else {
+                    return $amountOfDays;
+                }
             } else {
                 throw new InvalidArgumentException();
             }
