@@ -10,23 +10,27 @@ class Task6
 
     public function main(int $year, int $lastYear, int $month, int $lastMonth, string $day = 'Monday'): int
     {
-        if ($year < $lastYear || ($year == $lastYear && $month < $lastMonth)) {
-            $days = [1 => 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-            $amount = 0;
+        if ($year > 0 && $lastYear > 0 && $month > 0 && $lastMonth > 0) {
+            if ($year < $lastYear || ($year == $lastYear && $month < $lastMonth)) {
+                $days = [1 => 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                $amount = 0;
 
-            for ($currentYear = $year; $currentYear <= $lastYear; $currentYear++) {
-                for ($currentMonth = $currentYear == $year ? $month : 1;
-                    $currentMonth <= self::MONTHS && !($currentYear == $lastYear && $currentMonth == $lastMonth);
-                    $currentMonth++) {
-                    $firstDayOfMonth = date('w', strtotime("01.$currentMonth.$currentYear"));
+                for ($currentYear = $year; $currentYear <= $lastYear; $currentYear++) {
+                    for ($currentMonth = $currentYear == $year ? $month : 1;
+                        $currentMonth <= self::MONTHS && !($currentYear == $lastYear && $currentMonth == $lastMonth);
+                        $currentMonth++) {
+                        $firstDayOfMonth = date('w', strtotime("01.$currentMonth.$currentYear"));
 
-                    if ($firstDayOfMonth == array_search($day, $days)) {
-                        $amount++;
+                        if ($firstDayOfMonth == array_search($day, $days)) {
+                            $amount++;
+                        }
                     }
                 }
-            }
 
-            return $amount;
+                return $amount;
+            } else {
+                throw new InvalidArgumentException();
+            }
         } else {
             throw new InvalidArgumentException();
         }
