@@ -31,7 +31,7 @@ class Task9
     {
         for ($i = 0; $i < count($arr); $i++) {
             if ($arr[$i] < 0) {
-               return true;
+                return true;
             }
         }
 
