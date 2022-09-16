@@ -59,6 +59,13 @@ class Task12
         }
     }
 
+    public function multipleBy(int $multiplier): Task12
+    {
+        $this->result = $this->result * $multiplier;
+
+        return $this;
+    }
+
     public function __toString(): string
     {
         return $this->result;
