@@ -59,7 +59,7 @@ class Task12
         }
     }
 
-    public function multipleBy(int $multiplier): Task12
+    public function multiplyBy(int $multiplier): Task12
     {
         $this->result = $this->result * $multiplier;
 
