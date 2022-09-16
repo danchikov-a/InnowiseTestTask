@@ -66,6 +66,20 @@ class Task12
         return $this;
     }
 
+    public function addBy(int $term): Task12
+    {
+        $this->result = $this->result + $term;
+
+        return $this;
+    }
+
+    public function subtractBy(int $subtrahend): Task12
+    {
+        $this->result = $this->result - $subtrahend;
+
+        return $this;
+    }
+
     public function __toString(): string
     {
         return $this->result;
