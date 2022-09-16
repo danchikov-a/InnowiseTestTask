@@ -12,7 +12,7 @@ class Task8
 
         if ($jsonObject != null && is_array(json_decode($json, true))) {
             return sprintf(
-                "Title: %s\r\nAuthor: %s\r\nPublisher: %s\r\n",
+                "Title: %s\r\nAuthor: %s\r\nPublisher: %s",
                 $jsonObject->Title,
                 $jsonObject->Author,
                 $jsonObject->Detail->Publisher
