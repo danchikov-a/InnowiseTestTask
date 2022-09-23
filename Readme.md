@@ -3,9 +3,9 @@ Create a form for working with users using MVC, the data source is a MySQL datab
 Foobar is a Python library for dealing with word pluralization.
 
 ## Materials
-[How to display select option of <select> tag as selected   in php - W3codegenerator](https://w3codegenerator.com/article/how-to-display-select-option-of-select-tag-as-selected-using-foreach-method-in-php)
+[How to display select option of 'select' tag as selected in php - W3codegenerator](https://w3codegenerator.com/article/how-to-display-select-option-of-select-tag-as-selected-using-foreach-method-in-php)
 
-[MVC Design Pattern with a PHP example ](https://blog.pusher.com/laravel-mvc-use/)
+[MVC Design Pattern with a PHP example](https://blog.pusher.com/laravel-mvc-use/)
 
 [How Laravel implements MVC and how to use it effectively](https://choosealicense.com/licenses/mit/)
 
