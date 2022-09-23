@@ -5,11 +5,27 @@ Foobar is a Python library for dealing with word pluralization.
 ## Materials
 [How to display select option of 'select' tag as selected in php - W3codegenerator](https://w3codegenerator.com/article/how-to-display-select-option-of-select-tag-as-selected-using-foreach-method-in-php)
 
+***
+[MVC в PHP](https://www.youtube.com/playlist?list=PLqQ1VsG-wgxfUc8pKsv7MBSbp5Q3zFLi4)
+
+[PHP Namespaces](https://habr.com/ru/post/212773/)
+
+[PHP namespaces documentation](https://www.php.net/manual/ru/language.namespaces.php)
+
+***
+[PHP PDO](https://tproger.ru/translations/how-to-configure-and-use-pdo/)
+
+[PHP PDO documentation](https://www.php.net/manual/ru/book.pdo.php)
+
+***
+
 [MVC Design Pattern with a PHP example](https://blog.pusher.com/laravel-mvc-use/)
 
 [How Laravel implements MVC and how to use it effectively](https://choosealicense.com/licenses/mit/)
 
-[MVC в PHP](https://www.youtube.com/playlist?list=PLqQ1VsG-wgxfUc8pKsv7MBSbp5Q3zFLi4)
+***
+
+[PHP patterns examples](https://refactoring.guru/)
 
 ## Desription
 In the developed application, you must be able to add new users, edit user data, delete users, view the list of all users. You design the interface of the application and the structure of the MySQL database yourself.
