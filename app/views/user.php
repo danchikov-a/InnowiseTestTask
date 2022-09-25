@@ -10,6 +10,12 @@
     <input name="name" type="text">
 
     <label>Email</label>
+    <?php
+    //TODO validation
+    if (isset($_SESSION['email_error'])) {
+        echo "Error";
+    }
+    ?>
     <input name="email" type="email">
 
     <label>Gender</label>
@@ -42,7 +48,12 @@ foreach ($_GET["users"] as $user): ?>
         <?php echo $user->Email ?>
         <?php echo $user->Gender ?>
         <?php echo $user->Status ?>
+        <form action="delete.php" method="post" onclick="deleteConfirmation()">
+            <input name="deleteEmail" value="<?php echo $user->Email ?>" hidden>
+            <button id="deleteButton">Delete</button>
+        </form>
     </div>
 <?php endforeach; ?>
+<script type="text/javascript" src="../../public/js/confirm-delete.js"></script>
 </body>
 </html>

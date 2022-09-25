@@ -34,17 +34,24 @@ class User implements IUser
         $this->status = $status;
     }
 
-    public static function save(User $user)
+    public static function save(User $user): bool
     {
         $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
         $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
 
         $email = $user->getEmail();
-        $name = $user->getName();
-        $gender = $user->getGender()->value;
-        $status = $user->getStatus()->value;
 
-        $conn->query("INSERT INTO Users(Email, Name, Gender, Status) VALUES ('$email', '$name', '$gender', '$status')");
+        if ($conn->query("SELECT * FROM Users WHERE Email = '$email'")->rowCount() == 0) {
+            $name = $user->getName();
+            $gender = $user->getGender()->value;
+            $status = $user->getStatus()->value;
+
+            $conn->query("INSERT INTO Users(Email, Name, Gender, Status) VALUES ('$email', '$name', '$gender', '$status')");
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function delete(string $email)

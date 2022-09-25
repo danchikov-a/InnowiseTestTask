@@ -24,9 +24,9 @@ class UserController
 
     function delete(): void
     {
-        if (isset($_GET["id"])) {
-            $id = $_GET["id"];
-            User::delete($id);
+        if (isset($_POST["deleteEmail"])) {
+            $email = $_POST["deleteEmail"];
+            User::delete($email);
         }
     }
 }
