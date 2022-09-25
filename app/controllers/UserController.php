@@ -1,23 +1,32 @@
 <?php
 
 namespace src;
-require_once "app/models/impl/User.php";
+require "../models/impl/User.php";
 
-/*class UserController
+class UserController
 {
-    private User $user;
-
-    public function showUsers(): void
+    function all(): void
     {
-        $users = $this->user->getUsers();
-        $_GET['users'] = $users;
-
-        include "app/views/user.php";
+        $_GET['users'] = User::getUsers();
     }
-}*/
-$user = new User();
-$users = $user->getUsers();
 
-$_GET['users'] = $users;
+    function add(): void
+    {
+        if (isset($_POST)) {
+            $email = $_POST["email"];
+            $name = $_POST["name"];
+            $gender = Gender::from($_POST["gender"]);
+            $status = Status::from($_POST["status"]);
 
-include "app/views/user.php";
+            User::save(new User($name, $email, $gender, $status));
+        }
+    }
+
+    function delete(): void
+    {
+        if (isset($_GET["id"])) {
+            $id = $_GET["id"];
+            User::delete($id);
+        }
+    }
+}

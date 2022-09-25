@@ -4,8 +4,8 @@ namespace src;
 
 interface IUser
 {
-    public function addUser(User $user);
-    public function deleteUser(string $email);
-    public function editUser(string $email);
-    public function getUsers();
+    public static function save(User $user);
+    public static function delete(string $email);
+    public static function edit(string $oldEmail, User $user);
+    public static function getUsers();
 }

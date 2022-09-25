@@ -4,9 +4,9 @@ namespace src;
 
 use PDO;
 
-require_once "app/models/IUser.php";
-require_once "app/enums/Gender.php";
-require_once "app/enums/Status.php";
+require $_SERVER['DOCUMENT_ROOT'] . "/app/models/IUser.php";
+require $_SERVER['DOCUMENT_ROOT'] . "/app/enums/Gender.php";
+require $_SERVER['DOCUMENT_ROOT'] . "/app/enums/Status.php";
 
 class User implements IUser
 {
@@ -15,39 +15,72 @@ class User implements IUser
     private Gender $gender;
     private Status $status;
 
-    private array $users = [];
-
     private const DB_HOST = 'myapp.cfg.DB_HOST';
     private const DB_USER = 'myapp.cfg.DB_USER';
     private const DB_PASS = 'myapp.cfg.DB_PASS';
-    private const CONFIG_PATH = 'app/config/php.ini';
+    private const CONFIG_PATH = '/app/config/php.ini';
 
-    public function addUser(User $user)
+    /**
+     * @param string $name
+     * @param string $email
+     * @param Gender $gender
+     * @param Status $status
+     */
+    public function __construct(string $name, string $email, Gender $gender, Status $status)
     {
-        $this->users[] = $user;
+        $this->name = $name;
+        $this->email = $email;
+        $this->gender = $gender;
+        $this->status = $status;
     }
 
-    public function deleteUser(string $email)
+    public static function save(User $user)
     {
-        // TODO: Implement deleteUser() method.
-    }
-
-    public function editUser(string $email)
-    {
-        // TODO: Implement editUser() method.
-    }
-
-    public function getUsers(): array
-    {
-        $credentials = parse_ini_file(self::CONFIG_PATH);
+        $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
         $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
+
+        $email = $user->getEmail();
+        $name = $user->getName();
+        $gender = $user->getGender()->value;
+        $status = $user->getStatus()->value;
+
+        $conn->query("INSERT INTO Users(Email, Name, Gender, Status) VALUES ('$email', '$name', '$gender', '$status')");
+    }
+
+    public static function delete(string $email)
+    {
+        $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
+        $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
+
+        $conn->query("DELETE FROM Users WHERE Email = '$email'");
+    }
+
+    public static function edit(string $oldEmail, User $user)
+    {
+        $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
+        $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
+
+        $email = $user->getEmail();
+        $name = $user->getName();
+        $gender = $user->getGender()->value;
+        $status = $user->getGender()->value;
+
+        $conn->query("UPDATE Users SET Email = '$email', Name = '$name', Gender = '$gender', Status = '$status' WHERE Email = '$oldEmail'");
+    }
+
+    public static function getUsers(): array
+    {
+        $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
+        $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
+
+        $userList = [];
         $users = $conn->query("SELECT * from Users");
 
-        while ($row = $users->fetchObject(__CLASS__)) {
-            $this->users[] = $row;
+        while ($row = $users->fetchObject(__CLASS__, ['email', 'name', GENDER::MALE, STATUS::ACTIVE])) {
+            $userList[] = $row;
         }
 
-        return $this->users;
+        return $userList;
     }
 
     /**

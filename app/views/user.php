@@ -5,35 +5,44 @@
     <title>User form</title>
 </head>
 <body>
-    <form action="../../index.php" method="post">
-        <label>First and last name</label>
-        <input name="name" type="text">
+<form action="add.php" method="post">
+    <label>First and last name</label>
+    <input name="name" type="text">
 
-        <label>Email</label>
-        <input name="email" type="email">
+    <label>Email</label>
+    <input name="email" type="email">
 
-        <label>Gender</label>
-        <select name="gender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
+    <label>Gender</label>
+    <select name="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select>
 
-        <label>Status</label>
-        <select name="status">
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-        </select>
+    <label>Status</label>
+    <select name="status">
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+    </select>
 
-        <button>Add user</button>
-    </form>
+    <button>Add user</button>
+</form>
 
-    <?php foreach($_GET['users'] as $user): ?>
-        <div>
+<?php
+
+use src\Router;
+
+require "../Router.php";
+
+$router = new Router("UserController", "all");
+$router->route();
+
+foreach ($_GET["users"] as $user): ?>
+    <div>
         <?php echo $user->Name ?>
         <?php echo $user->Email ?>
         <?php echo $user->Gender ?>
         <?php echo $user->Status ?>
-        </div>
-    <?php endforeach; ?>
+    </div>
+<?php endforeach; ?>
 </body>
 </html>
