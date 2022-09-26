@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<form class="user-form" action="update.php" method="post">
+<form class="user-form" action="update" method="post">
     <caption>User form update</caption>
     <div class="form-group form-element">
         <label>First and last name</label>

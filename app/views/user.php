@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../../public/css/user.css">
 </head>
 <body>
-<form class="user-form" action="add.php" method="post">
+<form class="user-form" action="add" method="post">
     <caption>User form</caption>
     <div class="form-group form-element">
         <label>First and last name</label>
@@ -61,7 +61,7 @@
 
         use src\Router;
 
-        require "../Router.php";
+        require "app/Router.php";
 
         $router = new Router("UserController", "all");
         $router->route();
@@ -73,7 +73,7 @@
         <td><?php echo $user->Gender ?></td>
         <td><?php echo $user->Status ?></td>
         <td>
-            <form action="updateForm.php" method="post">
+            <form action="updateForm" method="post">
                 <input name="updateName" value="<?php echo $user->Name ?>" hidden>
                 <input name="updateEmail" value="<?php echo $user->Email ?>" hidden>
                 <input name="updateGender" value="<?php echo $user->Gender ?>" hidden>
@@ -82,7 +82,7 @@
             </form>
         </td>
         <td>
-            <form action="delete.php" method="post" onclick="return deleteConfirmation()">
+            <form action="delete" method="post" onclick="return deleteConfirmation()">
                 <input name="deleteEmail" value="<?php echo $user->Email ?>" hidden>
                 <button class="btn btn btn-outline-danger" id="deleteButton">Delete</button>
             </form>

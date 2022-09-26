@@ -1,9 +1,9 @@
 <?php
 
 namespace src;
-require "../Router.php";
+require "app/Router.php";
 
 $router = new Router("UserController", "add");
 $router->route();
 
-header("Location: user.php");
+header("Location: /user");

@@ -1,11 +1,11 @@
 <?php
 
 namespace src;
-require "../Router.php";
+require "app/Router.php";
 
 if (isset($_POST['deleteEmail'])) {
     $router = new Router("UserController", "delete");
     $router->route();
 }
 
-header("Location: user.php");
+header("Location: /user");

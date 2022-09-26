@@ -1,7 +1,7 @@
 <?php
 
 namespace src;
-require "../models/impl/User.php";
+require $_SERVER['DOCUMENT_ROOT'] . "/app/models/impl/User.php";
 
 class UserController
 {
