@@ -1,5 +1,5 @@
 const DELETE_MESSAGE = "Want to delete?";
 
 function deleteConfirmation() {
-    confirm(DELETE_MESSAGE);
+    return confirm(DELETE_MESSAGE);
 }

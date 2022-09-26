@@ -9,35 +9,34 @@
 </head>
 <body>
 <form class="user-form" action="add.php" method="post">
-
+    <caption>User form</caption>
     <div class="form-group form-element">
         <label>First and last name</label>
-        <input name="name" type="text">
+        <input name="name" type="text" required>
     </div>
     <div class="form-group form-element">
-    <label>Email</label>
-    <?php
-    //TODO validation
-    if (isset($_SESSION['email_error'])) {
-        echo "Error";
-    }
-    ?>
+        <label>Email</label>
+        <?php
+        session_start();
+        if (isset($_SESSION['email_error'])):?>
+            <div style="color:red">Not unique email</div>
+        <?php endif?>
+        <input id="email" name="email" type="email" required>
+    </div>
 
-    <input name="email" type="email">
+    <div class="form-group form-element">
+        <label>Gender</label>
+        <select class="custom-select user-select" name="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
     </div>
     <div class="form-group form-element">
-    <label>Gender</label>
-    <select class="custom-select user-select" name="gender">
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-    </select>
-    </div>
-    <div class="form-group form-element">
-    <label>Status</label>
-    <select class="custom-select user-select" name="status">
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-    </select>
+        <label>Status</label>
+        <select class="custom-select user-select" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+        </select>
     </div>
 
     <button class="btn btn-primary">Add user</button>
@@ -83,7 +82,7 @@
             </form>
         </td>
         <td>
-            <form action="delete.php" method="post" onclick="deleteConfirmation()">
+            <form action="delete.php" method="post" onclick="return deleteConfirmation()">
                 <input name="deleteEmail" value="<?php echo $user->Email ?>" hidden>
                 <button class="btn btn btn-outline-danger" id="deleteButton">Delete</button>
             </form>

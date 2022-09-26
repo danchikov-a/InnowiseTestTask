@@ -62,17 +62,23 @@ class User implements IUser
         $conn->query("DELETE FROM Users WHERE Email = '$email'");
     }
 
-    public static function edit(string $oldEmail, User $user)
+    public static function update(string $oldEmail, User $user): bool
     {
         $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
         $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
 
-        $email = $user->getEmail();
         $name = $user->getName();
+        $email = $user->getEmail();
         $gender = $user->getGender()->value;
-        $status = $user->getGender()->value;
+        $status = $user->getStatus()->value;
 
-        $conn->query("UPDATE Users SET Email = '$email', Name = '$name', Gender = '$gender', Status = '$status' WHERE Email = '$oldEmail'");
+        if ($conn->query("SELECT * FROM Users WHERE Email = '$email'")->rowCount() == 0) {
+            $conn->query("UPDATE Users SET Email = '$email', Name = '$name', Gender = '$gender', Status = '$status' WHERE Email = '$oldEmail'");
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function getUsers(): array
