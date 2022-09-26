@@ -3,9 +3,10 @@ USE innowise;
 CREATE TABLE Users
 (
     Email  varchar(255) primary key,
-    Name varchar(255),
-    Gender   varchar(255),
-    Status      varchar(255)
+    Name   varchar(255),
+    Gender Enum('male', 'female'),
+    Status Enum('active', 'inactive')
 );
 
-INSERT INTO Users(Email, Name, Gender, Status) VALUES ('qwe@gmail.com', 'qwe', 'male', 'active');
+INSERT INTO Users(Email, Name, Gender, Status)
+VALUES ('qwe@gmail.com', 'qwe', 'male', 'active');

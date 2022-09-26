@@ -2,42 +2,22 @@
 
 namespace src;
 
-use PDO;
-
 require $_SERVER['DOCUMENT_ROOT'] . "/app/models/IUser.php";
 require $_SERVER['DOCUMENT_ROOT'] . "/app/enums/Gender.php";
 require $_SERVER['DOCUMENT_ROOT'] . "/app/enums/Status.php";
+require $_SERVER['DOCUMENT_ROOT'] . "/app/models/Model.php";
 
-class User implements IUser
+class User extends Model implements IUser
 {
-    private string $name;
-    private string $email;
-    private Gender $gender;
-    private Status $status;
-
-    private const DB_HOST = 'myapp.cfg.DB_HOST';
-    private const DB_USER = 'myapp.cfg.DB_USER';
-    private const DB_PASS = 'myapp.cfg.DB_PASS';
-    private const CONFIG_PATH = '/app/config/php.ini';
-
-    /**
-     * @param string $name
-     * @param string $email
-     * @param Gender $gender
-     * @param Status $status
-     */
-    public function __construct(string $name, string $email, Gender $gender, Status $status)
-    {
-        $this->name = $name;
-        $this->email = $email;
-        $this->gender = $gender;
-        $this->status = $status;
-    }
+    public function __construct(private string $name,
+        private string $email,
+        private Gender $gender,
+        private Status $status
+    ){}
 
     public static function save(User $user): bool
     {
-        $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
-        $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
+        $conn = static::getDB();
 
         $email = $user->getEmail();
 
@@ -56,16 +36,14 @@ class User implements IUser
 
     public static function delete(string $email)
     {
-        $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
-        $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
+        $conn = static::getDB();
 
         $conn->query("DELETE FROM Users WHERE Email = '$email'");
     }
 
     public static function update(string $oldEmail, User $user): bool
     {
-        $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
-        $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
+        $conn = static::getDB();
 
         $name = $user->getName();
         $email = $user->getEmail();
@@ -83,8 +61,7 @@ class User implements IUser
 
     public static function getUsers(): array
     {
-        $credentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH);
-        $conn = new PDO($credentials[self::DB_HOST], $credentials[self::DB_USER], $credentials[self::DB_PASS]);
+        $conn = static::getDB();
 
         $userList = [];
         $users = $conn->query("SELECT * from Users");
