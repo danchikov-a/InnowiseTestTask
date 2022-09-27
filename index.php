@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 $request_url = rtrim(ltrim(urldecode(parse_url($_SERVER['REQUEST_URI'], 5)), '/'), '/');
 
 $params = array_filter(explode("/", $request_url));

@@ -1,19 +1,17 @@
 <?php
 
 namespace src;
-require $_SERVER['DOCUMENT_ROOT'] . "/app/models/impl/User.php";
+require $_SERVER["DOCUMENT_ROOT"] . "/app/models/impl/User.php";
 
 class UserController
 {
     function all(): void
     {
-        $_GET['users'] = User::getUsers();
+        $_GET["users"] = User::getUsers();
     }
 
     function add(): void
     {
-        session_start();
-
         if (isset($_POST)) {
             $email = $_POST["email"];
             $name = $_POST["name"];
@@ -21,9 +19,9 @@ class UserController
             $status = Status::from($_POST["status"]);
 
             if (User::save(new User($name, $email, $gender, $status))) {
-                unset($_SESSION['email_error']);
+                unset($_SESSION["email_error"]);
             } else {
-                $_SESSION['email_error'] = true;
+                $_SESSION["email_error"] = true;
             }
         }
     }
@@ -38,8 +36,6 @@ class UserController
 
     function update(): void
     {
-        session_start();
-
         if (isset($_POST)) {
             $oldEmail = $_POST["oldEmail"];
 
@@ -49,9 +45,9 @@ class UserController
             $status = Status::from($_POST["status"]);
 
             if (User::update($oldEmail, new User($name, $email, $gender, $status))) {
-                unset($_SESSION['email_error']);
+                unset($_SESSION["email_error"]);
             } else {
-                $_SESSION['email_error'] = true;
+                $_SESSION["email_error"] = true;
             }
         }
     }
