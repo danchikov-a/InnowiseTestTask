@@ -21,7 +21,8 @@ if (count($params) == 2) {
         '/add' => 'app/views/add.php',
         '/delete' => 'app/views/delete.php',
         '/updateForm' => 'app/views/updateForm.php',
-        '/update' => 'app/views/update.php'
+        '/update' => 'app/views/update.php',
+        '/user.css' => 'css/user.css'
     ];
 
     $request_url = $_SERVER['REQUEST_URI'];
@@ -35,5 +36,6 @@ if (count($params) == 2) {
     require_once('pages/404.php');
 }
 ?>
-<style><?php include 'public/css/user.css'; ?></style>
+<style><?php include 'node_modules/bootstrap/dist/css/bootstrap.min.css'; ?></style>
+<style><?php include 'css/user.css'; ?></style>
 <script><?php include 'public/js/confirm-delete.js'; ?></script>
