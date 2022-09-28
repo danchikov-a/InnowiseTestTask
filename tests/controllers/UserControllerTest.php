@@ -1,9 +1,8 @@
 <?php
 
 namespace src;
-$_SERVER['DOCUMENT_ROOT'] = '/home/artem/PhpstormProjects/InnowiseTestTask/';
-
-require $_SERVER['DOCUMENT_ROOT'] . "app/controllers/UserController.php";
+include __DIR__ . "/../../config/config.php";
+require $_SERVER['DOCUMENT_ROOT'] . "/app/controllers/UserController.php";
 
 use PHPUnit\Framework\TestCase;
 

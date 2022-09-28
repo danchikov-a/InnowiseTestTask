@@ -1,10 +1,8 @@
 <?php
 
 namespace src;
-
-$_SERVER['DOCUMENT_ROOT'] = '/home/artem/PhpstormProjects/InnowiseTestTask/';
-
-require  $_SERVER['DOCUMENT_ROOT'] . "app/models/impl/User.php";
+include __DIR__ . "/../../config/config.php";
+require $_SERVER['DOCUMENT_ROOT'] . "/app/models/impl/User.php";
 
 use PDO;
 use PHPUnit\Framework\TestCase;
