@@ -1,9 +1,11 @@
 <?php
 
-namespace src;
+namespace Tests\Models;
 include __DIR__ . "/../../config/config.php";
-require $_SERVER['DOCUMENT_ROOT'] . "/app/models/impl/User.php";
 
+use App\Enums\Gender;
+use App\Enums\Status;
+use App\Models\Impl\User;
 use PDO;
 use PHPUnit\Framework\TestCase;
 

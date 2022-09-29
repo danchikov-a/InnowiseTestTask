@@ -1,7 +1,8 @@
 <?php
 
-namespace src;
-require $_SERVER['DOCUMENT_ROOT'] . "/app/controllers/UserController.php";
+namespace App;
+
+use App\Controllers\UserController;
 
 class Router
 {

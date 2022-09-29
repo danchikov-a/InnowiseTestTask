@@ -1,3 +1,6 @@
+<?php
+namespace App\Views;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +11,7 @@
     <link rel="stylesheet" href="../../public/css/user.css">
 </head>
 <body>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/public/templates/header.html" ?>
 
 <form class="user-form" action="update" method="post">
     <caption>User form update</caption>
@@ -43,6 +47,8 @@
 
     <button class="btn btn-primary">Update user</button>
 </form>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/public/templates/footer.html" ?>
+
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>

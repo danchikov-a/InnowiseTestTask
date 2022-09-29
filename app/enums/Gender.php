@@ -1,6 +1,6 @@
 <?php
 
-namespace src;
+namespace App\Enums;
 
 enum Gender: string
 {

@@ -1,4 +1,6 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+
 session_start();
 $request_url = rtrim(ltrim(urldecode(parse_url($_SERVER['REQUEST_URI'], 5)), '/'), '/');
 

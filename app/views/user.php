@@ -1,13 +1,18 @@
+<?php
+namespace App\Views;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>User form</title>
 
-    <link rel="stylesheet" href="/user.css" type="text/css">
+    <link rel="stylesheet" href="user.css" type="text/css">
     <link rel="stylesheet" href="bootstrap.min.css" type="text/css">
 </head>
 <body>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/public/templates/header.html" ?>
+
 <form class="user-form" action="add" method="post">
     <caption>User form</caption>
     <div class="form-group form-element">
@@ -17,10 +22,10 @@
     <div class="form-group form-element">
         <label>Email</label>
         <?php
-        session_start();
+
         if (isset($_SESSION['email_error'])):?>
             <div style="color:red">Not unique email</div>
-        <?php endif?>
+        <?php endif ?>
         <input id="email" name="email" type="email" required>
     </div>
 
@@ -59,9 +64,7 @@
     <tr>
         <?php
 
-        use src\Router;
-
-        require "app/Router.php";
+        use App\Router;
 
         $router = new Router("UserController", "all");
         $router->route();
@@ -92,8 +95,10 @@
 
     </tbody>
 </table>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/public/templates/footer.html" ?>
 
 <script type="text/javascript" src="/confirm-delete.js"></script>
 <script src="public/js/index.js"></script>
+
 </body>
 </html>

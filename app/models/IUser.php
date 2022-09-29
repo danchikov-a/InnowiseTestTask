@@ -1,6 +1,8 @@
 <?php
 
-namespace src;
+namespace App\Models;
+
+use App\Models\Impl\User;
 
 interface IUser
 {

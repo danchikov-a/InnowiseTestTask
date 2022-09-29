@@ -1,11 +1,11 @@
 <?php
 
-namespace src;
+namespace App\Models\Impl;
 
-require $_SERVER['DOCUMENT_ROOT'] . "/app/models/IUser.php";
-require $_SERVER['DOCUMENT_ROOT'] . "/app/enums/Gender.php";
-require $_SERVER['DOCUMENT_ROOT'] . "/app/enums/Status.php";
-require $_SERVER['DOCUMENT_ROOT'] . "/app/models/Model.php";
+use App\Enums\Gender;
+use App\Enums\Status;
+use App\Models\IUser;
+use App\Models\Model;
 
 class User extends Model implements IUser
 {

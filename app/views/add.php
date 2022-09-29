@@ -1,7 +1,8 @@
 <?php
 
-namespace src;
-require "app/Router.php";
+namespace App\Views;
+
+use App\Router;
 
 $router = new Router("UserController", "add");
 $router->route();

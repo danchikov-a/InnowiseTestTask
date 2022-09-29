@@ -1,7 +1,10 @@
 <?php
 
-namespace src;
-require $_SERVER["DOCUMENT_ROOT"] . "/app/models/impl/User.php";
+namespace App\Controllers;
+
+use App\Enums\Gender;
+use App\Enums\Status;
+use App\Models\Impl\User;
 
 class UserController
 {

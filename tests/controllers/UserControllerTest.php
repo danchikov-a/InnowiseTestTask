@@ -2,8 +2,8 @@
 
 namespace src;
 include __DIR__ . "/../../config/config.php";
-require $_SERVER['DOCUMENT_ROOT'] . "/app/controllers/UserController.php";
 
+use App\Controllers\UserController;
 use PHPUnit\Framework\TestCase;
 
 class UserControllerTest extends TestCase
