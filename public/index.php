@@ -30,10 +30,10 @@ if (count($params) == 2) {
     if (isset($routes[$request_url])) {
         require_once $routes[$request_url];
     } else {
-        require_once('pages/404.php');
+        require_once('app/views/404.php');
     }
 } else {
-    require_once('pages/404.php');
+    require_once('app/views/404.php');
 }
 ?>
 <style><?php include 'node_modules/bootstrap/dist/css/bootstrap.min.css'; ?></style>
