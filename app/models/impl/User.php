@@ -10,23 +10,30 @@ require $_SERVER['DOCUMENT_ROOT'] . "/app/models/Model.php";
 class User extends Model implements IUser
 {
     public function __construct(private string $name,
-        private string $email,
-        private Gender $gender,
-        private Status $status
-    ){}
+                                private string $email,
+                                private Gender $gender,
+                                private Status $status
+    )
+    {
+    }
 
     public static function save(User $user): bool
     {
         $conn = static::getDB();
 
         $email = $user->getEmail();
+        $selectStatement = $conn->prepare("SELECT * FROM Users WHERE Email = :email");
+        $rowsAmount = $selectStatement->rowCount();
 
-        if ($conn->query("SELECT * FROM Users WHERE Email = '$email'")->rowCount() == 0) {
+        if ($rowsAmount == 0) {
+            $selectStatement->execute(['email' => $email]);
             $name = $user->getName();
             $gender = $user->getGender()->value;
             $status = $user->getStatus()->value;
 
-            $conn->query("INSERT INTO Users(Email, Name, Gender, Status) VALUES ('$email', '$name', '$gender', '$status')");
+            $insertStatement = $conn->prepare("INSERT INTO Users(Email, Name, Gender, Status)
+                                                            VALUES (:email, :name, :gender, :status)");
+            $insertStatement->execute(['email' => $email, 'name' => $name, 'gender' => $gender, 'status' => $status]);
 
             return true;
         } else {
@@ -38,20 +45,28 @@ class User extends Model implements IUser
     {
         $conn = static::getDB();
 
-        $conn->query("DELETE FROM Users WHERE Email = '$email'");
+        $deleteStatement = $conn->prepare("DELETE FROM Users WHERE Email = :email");
+        $deleteStatement->execute(['email' => $email]);
     }
 
     public static function update(string $oldEmail, User $user): bool
     {
         $conn = static::getDB();
 
-        $name = $user->getName();
         $email = $user->getEmail();
-        $gender = $user->getGender()->value;
-        $status = $user->getStatus()->value;
+        $selectStatement = $conn->prepare("SELECT * FROM Users WHERE Email = :email");
+        $rowsAmount = $selectStatement->rowCount();
 
-        if ($conn->query("SELECT * FROM Users WHERE Email = '$email'")->rowCount() == 0) {
-            $conn->query("UPDATE Users SET Email = '$email', Name = '$name', Gender = '$gender', Status = '$status' WHERE Email = '$oldEmail'");
+        if ($rowsAmount == 0) {
+            $selectStatement->execute(['email' => $email]);
+            $name = $user->getName();
+            $gender = $user->getGender()->value;
+            $status = $user->getStatus()->value;
+
+            $insertStatement = $conn->prepare("UPDATE Users 
+                    SET Email = :email, Name = :name, Gender = :gender, Status = :status WHERE Email = :oldEmail");
+            $insertStatement->execute(['email' => $email, 'name' => $name,
+                'gender' => $gender, 'status' => $status, 'oldEmail' => $oldEmail]);
 
             return true;
         } else {
