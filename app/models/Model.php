@@ -17,7 +17,7 @@ class Model
      */
     protected static function getDB(): PDO
     {
-        $config = require $_SERVER['DOCUMENT_ROOT'] . self::CONFIG_PATH;
+        $config = require dirname(__DIR__, 2) . self::CONFIG_PATH;
         static $db = null;
 
         if ($db === null) {

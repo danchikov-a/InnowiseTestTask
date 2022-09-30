@@ -7,11 +7,11 @@ namespace App\Views;
     <meta charset="UTF-8">
     <title>User form</title>
 
-    <link rel="stylesheet" href="user.css" type="text/css">
-    <link rel="stylesheet" href="bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/user.css" type="text/css">
+    <link rel="stylesheet" href="/css/app.css" type="text/css">
 </head>
 <body>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/public/templates/header.html" ?>
+<?php include dirname(__DIR__, 2) . "/public/templates/header.html" ?>
 
 <form class="user-form" action="add" method="post">
     <caption>User form</caption>
@@ -95,10 +95,10 @@ namespace App\Views;
 
     </tbody>
 </table>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/public/templates/footer.html" ?>
+<?php include dirname(__DIR__, 2) . "/public/templates/footer.html" ?>
 
-<script type="text/javascript" src="/confirm-delete.js"></script>
-<script src="public/js/index.js"></script>
+<script type="text/javascript" src="/js/confirm-delete.js"></script>
+<script type="text/javascript" src="/js/app.js"></script>
 
 </body>
 </html>
