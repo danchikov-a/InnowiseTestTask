@@ -23,10 +23,11 @@ class User extends Model implements IUser
 
         $email = $user->getEmail();
         $selectStatement = $conn->prepare("SELECT * FROM Users WHERE Email = :email");
+        $selectStatement->execute(['email' => $email]);
+
         $rowsAmount = $selectStatement->rowCount();
 
         if ($rowsAmount == 0) {
-            $selectStatement->execute(['email' => $email]);
             $name = $user->getName();
             $gender = $user->getGender()->value;
             $status = $user->getStatus()->value;
@@ -41,12 +42,14 @@ class User extends Model implements IUser
         }
     }
 
-    public static function delete(string $email)
+    public static function delete(string $email): bool
     {
         $conn = static::getDB();
 
         $deleteStatement = $conn->prepare("DELETE FROM Users WHERE Email = :email");
         $deleteStatement->execute(['email' => $email]);
+
+        return $deleteStatement->rowCount() > 0;
     }
 
     public static function update(string $oldEmail, User $user): bool
@@ -86,6 +89,21 @@ class User extends Model implements IUser
         }
 
         return $userList;
+    }
+
+    public static function getUser(string $email): User|false
+    {
+        $conn = static::getDB();
+
+        $selectStatement = $conn->prepare("SELECT * FROM Users WHERE Email = :email");
+        $selectStatement->execute(['email' => $email]);
+        $obj = $selectStatement->fetchObject(__CLASS__, ['email', 'name', GENDER::MALE, STATUS::ACTIVE]);
+
+        if ($selectStatement->rowCount() == 1) {
+            return $obj;
+        } else {
+            return false;
+        }
     }
 
     /**

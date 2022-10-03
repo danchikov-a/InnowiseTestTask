@@ -9,7 +9,9 @@
       "App\\Enums\\": "app/enums",
       "App\\Models\\": "app/models",
       "App\\Models\\Impl\\": "app/models/impl",
-      "App\\Views\\" : "app/views"
+      "App\\Views\\" : "app/views",
+      "App\\Api\\" : "app/api",
+      "App\\Api\\Impl\\" : "app/api/impl"
     }
   }
 }

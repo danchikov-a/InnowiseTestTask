@@ -1,22 +1,25 @@
 <?php
 
+use App\Api\Impl\UserApi;
+
 require_once dirname(__DIR__) . '/vendor/autoload.php';
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 $request_url = rtrim(ltrim(urldecode(parse_url($_SERVER['REQUEST_URI'], 5)), '/'), '/');
 
 $params = array_filter(explode("/", $request_url));
+
 //если в url передано 2 параметра
-if (count($params) == 2) {
-    $dynamic_routes = [
-        'offers' => 'pages/offer.php',
-    ];
-    if (isset($dynamic_routes[$params[0]])) {
-        $get = $params[1];
-        require_once $dynamic_routes[$params[0]];
+if (count($params) >= 2) {
+    if ($params[0] == 'api' && $params[1] == 'users') {
+        $action = $params[1];
+
+        $api = new UserApi();
+        $api->response();
     } else {
-        require_once('pages/404.php');
+        require_once dirname(__DIR__) . "/" . ('app/views/404.php');
     }
 } else if (count($params) < 2) {
     $routes = [
@@ -33,8 +36,8 @@ if (count($params) == 2) {
     if (isset($routes[$request_url])) {
         require_once dirname(__DIR__) . "/" . $routes[$request_url];
     } else {
-        require_once('app/views/404.php');
+        require_once dirname(__DIR__) . "/" . ('app/views/404.php');
     }
 } else {
-    require_once('app/views/404.php');
+    require_once dirname(__DIR__) . "/" . ('app/views/404.php');
 }
