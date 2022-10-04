@@ -2,9 +2,10 @@
 
 namespace App\Api;
 
-abstract class Api
+abstract class AbstractApi
 {
     protected const CERTAIN_EMAIL_PARAM = 2;
+
     protected array $uriParts;
 
     public function response(): void
@@ -15,22 +16,22 @@ abstract class Api
 
         switch ($method) {
             case 'GET':
-                $this->methodGet();
+                $this->get();
                 break;
             case 'POST':
-                $this->methodPost();
+                $this->post();
                 break;
             case 'DELETE':
-                $this->methodDelete();
+                $this->delete();
                 break;
             case 'PUT':
-                $this->methodPut();
+                $this->put();
                 break;
         }
     }
 
-    abstract protected function methodGet();
-    abstract protected function methodPost();
-    abstract protected function methodDelete();
-    abstract protected function methodPut();
+    abstract protected function get();
+    abstract protected function post();
+    abstract protected function delete();
+    abstract protected function put();
 }

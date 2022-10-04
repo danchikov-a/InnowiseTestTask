@@ -13,5 +13,8 @@
       "App\\Api\\" : "app/api",
       "App\\Api\\Impl\\" : "app/api/impl"
     }
+  },
+  "require": {
+    "ext-pdo": "*"
   }
 }
