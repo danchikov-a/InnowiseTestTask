@@ -27,6 +27,8 @@ class UserController
                 $_SESSION["email_error"] = true;
             }
         }
+
+        header("Location: /");
     }
 
     function delete(): void
@@ -35,6 +37,8 @@ class UserController
             $email = $_POST["deleteEmail"];
             User::delete($email);
         }
+
+        header("Location: /");
     }
 
     function update(): void
@@ -53,5 +57,7 @@ class UserController
                 $_SESSION["email_error"] = true;
             }
         }
+
+        header("Location: /");
     }
 }

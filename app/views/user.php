@@ -1,19 +1,10 @@
 <?php
 namespace App\Views;
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User form</title>
 
-    <link rel="stylesheet" href="/css/user.css" type="text/css">
-    <link rel="stylesheet" href="/css/app.css" type="text/css">
-</head>
-<body>
 <?php include dirname(__DIR__, 2) . "/public/templates/header.html" ?>
 
-<form class="user-form" action="add" method="post">
+<form class="user-form" action="/index.php?controller=UserController&action=add" method="post">
     <caption>User form</caption>
     <div class="form-group form-element">
         <label>First and last name</label>
@@ -64,11 +55,6 @@ namespace App\Views;
     <tr>
         <?php
 
-        use App\Router;
-
-        $router = new Router("UserController", "all");
-        $router->route();
-
         foreach ($_GET["users"] as $user): ?>
 
         <td><?php echo $user->Name ?></td>
@@ -85,7 +71,7 @@ namespace App\Views;
             </form>
         </td>
         <td>
-            <form action="delete" method="post" onclick="return deleteConfirmation()">
+            <form action="/index.php?controller=UserController&action=delete" method="post" onclick="return deleteConfirmation()">
                 <input name="deleteEmail" value="<?php echo $user->Email ?>" hidden>
                 <button class="btn btn btn-outline-danger" id="deleteButton">Delete</button>
             </form>
