@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Impl\File;
+use App\Models\Impl\Logger;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -35,11 +36,16 @@ class FileController
 
         if ($currentDirectorySize + $_FILES["file"]["size"] < self::STORAGE_CAPACITY_BYTES) {
             move_uploaded_file($_FILES["file"]["tmp_name"], $file);
-
             unset($_SESSION['file_error']);
+            $loggerMessage = "SUCCESS: file was uploaded.";
         } else {
             $_SESSION['file_error'] = true;
+            $loggerMessage = "ERROR: not enough space.";
         }
+
+        $formattedString = sprintf("%s %s %s %s",
+            $loggerMessage, $_FILES["file"]["name"], $_FILES["file"]["size"], date('d-m-y h:i:s'));
+        Logger::writeLog($formattedString);
 
         header("Location: /file");
     }
