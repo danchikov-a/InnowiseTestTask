@@ -84,7 +84,3 @@ namespace App\Views;
 <?php include dirname(__DIR__, 2) . "/public/templates/footer.html" ?>
 
 <script type="text/javascript" src="/js/confirm-delete.js"></script>
-<script type="text/javascript" src="/js/app.js"></script>
-
-</body>
-</html>

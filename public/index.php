@@ -26,6 +26,7 @@ if (isset($params[1]) && isset($params[2])) {
         '/' => 'app/views/user.php',
         '/user' => 'app/views/user.php',
         '/updateForm' => 'app/views/updateForm.php',
+        '/file' => 'app/views/fileUploadForm.php'
     ];
 
     $controllerName = $_GET['controller'] ?? 'UserController';

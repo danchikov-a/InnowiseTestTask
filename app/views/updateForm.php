@@ -1,15 +1,7 @@
 <?php
 namespace App\Views;
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Update user</title>
-    <link rel="stylesheet" href="/css/user.css" type="text/css">
-    <link rel="stylesheet" href="/css/app.css" type="text/css">
-</head>
-<body>
+
 <?php include dirname(__DIR__, 2) . "/public/templates/header.html" ?>
 
 <form class="user-form" action="/index.php?controller=UserController&action=update" method="post">
