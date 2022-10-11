@@ -9,11 +9,7 @@ use App\Models\Model;
 
 class User extends Model implements IUser
 {
-    public function __construct(private string $name,
-                                private string $email,
-                                private Gender $gender,
-                                private Status $status
-    )
+    public function __construct(private string $name, private string $email, private Gender $gender, private Status $status)
     {
     }
 
@@ -42,16 +38,6 @@ class User extends Model implements IUser
         }
     }
 
-    public static function delete(string $email): bool
-    {
-        $conn = static::getDB();
-
-        $deleteStatement = $conn->prepare("DELETE FROM Users WHERE Email = :email");
-        $deleteStatement->execute(['email' => $email]);
-
-        return $deleteStatement->rowCount() > 0;
-    }
-
     public static function update(string $oldEmail, User $user): bool
     {
         $conn = static::getDB();
@@ -75,6 +61,16 @@ class User extends Model implements IUser
         } else {
             return false;
         }
+    }
+
+    public static function delete(string $email): bool
+    {
+        $conn = static::getDB();
+
+        $deleteStatement = $conn->prepare("DELETE FROM Users WHERE Email = :email");
+        $deleteStatement->execute(['email' => $email]);
+
+        return $deleteStatement->rowCount() > 0;
     }
 
     public static function getUsers(): array

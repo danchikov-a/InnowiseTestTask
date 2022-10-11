@@ -2,14 +2,10 @@
 namespace App\Views;
 ?>
 
-<?php use App\Controllers\FileController;
+<?php include "header.php"; ?>
 
-include dirname(__DIR__, 2) . "/public/templates/header.html";
-$fileController = new FileController();
-$fileController->all();
-?>
-
-<form action="/index.php?controller=FileController&action=create" class="user-form" method="post" enctype="multipart/form-data" onSubmit="return validateFile()">
+<form action="/create" class="user-form" method="post"
+      enctype="multipart/form-data" onSubmit="return validateFile()">
     <div>
         <div class="form-group form-element">
             <label for="file">Choose file to upload</label>
@@ -36,14 +32,12 @@ $fileController->all();
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <?php
 
-        foreach ($_GET["files"] as $file): ?>
-
-        <td><?php echo $file->getFileName() ?></td>
-        <td><?php echo $file->getFileSize() ?></td>
-    </tr>
+    <?php foreach ($_GET["files"] as $file): ?>
+        <tr>
+            <td><?= $file->getFileName() ?></td>
+            <td><?= $file->getFileSize() ?></td>
+        </tr>
     <?php endforeach; ?>
 
     </tbody>
@@ -52,4 +46,4 @@ $fileController->all();
 
 <script type="text/javascript" src="/js/validate-file.js"></script>
 
-<?php include dirname(__DIR__, 2) . "/public/templates/footer.html" ?>
+<?php include "footer.php" ?>

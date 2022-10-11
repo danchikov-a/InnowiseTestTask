@@ -1,11 +1,11 @@
 .user-form {
     display: flex;
-    background: rgba(0,0,0,0.1);
+    background: rgba(0,0,0,.1);
     flex-direction: column;
     border: 1px solid #000000;
     width: 25%;
-    margin: 5px 5px 5px 5px;
-    padding: 5px 5px 5px 5px
+    margin: 5px;
+    padding: 5px
 }
 
 .form-element {

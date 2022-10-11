@@ -2,13 +2,13 @@
 namespace App\Views;
 ?>
 
-<?php include dirname(__DIR__, 2) . "/public/templates/header.html" ?>
+<?php include "header.php" ?>
 
-<form class="user-form" action="/index.php?controller=UserController&action=update" method="post">
+<form class="user-form" action="/update" method="post">
     <caption>User form update</caption>
     <div class="form-group form-element">
         <label>First and last name</label>
-        <input name="name" type="text" value="<?php echo $_POST['updateName']?>" required>
+        <input name="name" type="text" value="<?= $_POST['updateName']?>" required>
     </div>
     <div class="form-group form-element">
         <label>Email</label>
@@ -17,8 +17,8 @@ namespace App\Views;
         if (isset($_SESSION['email_error'])):?>
             <div style="color:red">Not unique email</div>
         <?php endif?>
-        <input id="email" name="email" type="email" value="<?php echo $_POST['updateEmail']?>" required>
-        <input name="oldEmail" type="email" value="<?php echo $_POST['updateEmail']?>" hidden>
+        <input id="email" name="email" type="email" value="<?= $_POST['updateEmail']?>" required>
+        <input name="oldEmail" type="email" value="<?= $_POST['updateEmail']?>" hidden>
     </div>
 
     <div class="form-group form-element">
@@ -38,7 +38,7 @@ namespace App\Views;
 
     <button class="btn btn-primary">Update user</button>
 </form>
-<?php include dirname(__DIR__, 2) . "/public/templates/footer.html" ?>
+<?php include "footer.php" ?>
 
 </body>
 </html>

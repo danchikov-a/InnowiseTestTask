@@ -1,7 +1,7 @@
 <?php
 
 namespace Tests\Models;
-include __DIR__ . "/../../config/config.php";
+include __DIR__ . "/../../config/apiMessages.php";
 
 use App\Enums\Gender;
 use App\Enums\Status;
@@ -15,7 +15,7 @@ class UserTest extends TestCase
     private const DB_USER = 'user';
     private const DB_PASS = 'password';
     private const DB_CONFIG = 'db';
-    private const CONFIG_PATH = '/config/config.php';
+    private const CONFIG_PATH = '/config/apiMessages.php';
 
     private PDO $db;
 

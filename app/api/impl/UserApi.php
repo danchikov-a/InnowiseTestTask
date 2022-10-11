@@ -9,26 +9,6 @@ use App\Models\Impl\User;
 
 class UserApi extends AbstractApi
 {
-    private const CONFIG_PATH = '/config/config.php';
-
-    private const API = 'api';
-    private const API_USER_DOESNT_EXIST = 'userDoesntExistMessage';
-    private const API_USER_SAVED = 'userSavedMessage';
-    private const API_USER_EXISTS = 'userExistsMessage';
-    private const API_PARAMS_NOT_SET = 'paramsNotSetMessage';
-    private const API_NOT_VALID_TWO_PARTS_URI = 'notValidTwoPartsUriMessage';
-    private const API_NOT_VALID_THREE_PARTS_URI = 'notValidThreePartsUriMessage';
-    private const API_USER_DELETED = 'userDeletedMessage';
-    private const API_USER_UPDATED = 'userUpdateMessage';
-
-    private mixed $config;
-
-    public function __construct()
-    {
-        $this->config = require dirname(__DIR__, 3) . self::CONFIG_PATH;
-    }
-
-
     protected function get(): void
     {
         if (isset($this->uriParts[self::CERTAIN_EMAIL_PARAM])) {
@@ -36,7 +16,7 @@ class UserApi extends AbstractApi
 
             if (!$user) {
                 http_response_code(404);
-                echo $this->config[self::API][self::API_USER_DOESNT_EXIST];
+                echo $this->messages['userDoesntExistMessage'];
             } else {
                 http_response_code(200);
                 echo json_encode($user, JSON_PRETTY_PRINT);
@@ -57,18 +37,18 @@ class UserApi extends AbstractApi
 
                 if (User::save(new User($name, $email, $gender, $status))) {
                     http_response_code(200);
-                    echo $this->config[self::API][self::API_USER_SAVED];
+                    echo $this->messages['userSavedMessage'];
                 } else {
                     http_response_code(404);
-                    echo $this->config[self::API][self::API_USER_EXISTS];
+                    echo $this->messages['userExistsMessage'];
                 }
             } else {
                 http_response_code(422);
-                echo $this->config[self::API][self::API_PARAMS_NOT_SET];
+                echo $this->messages['paramsNotSetMessage'];
             }
         } else {
             http_response_code(400);
-            echo $this->config[self::API][self::API_NOT_VALID_TWO_PARTS_URI];
+            echo $this->messages['notValidTwoPartsUriMessage'];
         }
     }
 
@@ -79,14 +59,14 @@ class UserApi extends AbstractApi
 
             if (User::delete($email)) {
                 http_response_code(200);
-                echo $this->config[self::API][self::API_USER_DELETED];
+                echo $this->messages['userDeletedMessage'];
             } else {
                 http_response_code(404);
-                echo $this->config[self::API][self::API_USER_DOESNT_EXIST];
+                echo $this->messages['userDoesntExistMessage'];
             }
         } else {
             http_response_code(400);
-            echo $this->config[self::API][self::API_NOT_VALID_THREE_PARTS_URI];
+            echo $this->messages['notValidThreePartsUriMessage'];
         }
     }
 
@@ -104,18 +84,18 @@ class UserApi extends AbstractApi
 
                 if (User::update($oldEmail, new User($name, $email, $gender, $status))) {
                     http_response_code(200);
-                    echo $this->config[self::API][self::API_USER_UPDATED];
+                    echo $this->messages['userUpdateMessage'];
                 } else {
                     http_response_code(404);
-                    echo $this->config[self::API][self::API_USER_DOESNT_EXIST];
+                    echo $this->messages['userDoesntExistMessage'];
                 }
             } else {
                 http_response_code(422);
-                echo $this->config[self::API][self::API_PARAMS_NOT_SET];
+                echo $this->messages['paramsNotSetMessage'];
             }
         } else {
             http_response_code(400);
-            echo $this->config[self::API][self::API_NOT_VALID_THREE_PARTS_URI];
+            echo $this->messages['notValidThreePartsUriMessage'];
         }
     }
 

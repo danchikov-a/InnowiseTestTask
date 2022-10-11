@@ -7,15 +7,15 @@ use App\Models\Impl\Logger;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use App\View;
 
 class FileController
 {
-    private const UPLOAD_DIRECTORY = "/uploads/";
     private const STORAGE_CAPACITY_BYTES = 7168;
 
     public function all(): void
     {
-        $path = realpath(dirname(__DIR__, 2) . self::UPLOAD_DIRECTORY);
+        $path = realpath(dirname(__DIR__, 2) . $_ENV['FILE_UPLOAD_DIRECTORY']);
 
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
             $fileSize = filesize($object);
@@ -23,14 +23,15 @@ class FileController
 
             $_GET["files"][] = new File($fileName, $fileSize);
         }
+
+        View::render('app/views/fileUploadForm.php');
     }
 
     public function create(): void
     {
         $uploadingFile = $_FILES["file"];
-        //use at sign because all error messages are ignored so if such dir exists we won't see message on our page
-        @mkdir(dirname(__DIR__, 2) . self::UPLOAD_DIRECTORY, 777);
-        $directory = dirname(__DIR__, 2) . self::UPLOAD_DIRECTORY;
+        $directory = dirname(__DIR__, 2) . $_ENV['FILE_UPLOAD_DIRECTORY'];
+        @mkdir($directory, 777);
         $file = $directory . basename($uploadingFile["name"]);
 
         $currentDirectorySize = $this->getDirectorySize($directory);

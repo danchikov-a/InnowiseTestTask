@@ -5,15 +5,23 @@ namespace App\Controllers;
 use App\Enums\Gender;
 use App\Enums\Status;
 use App\Models\Impl\User;
+use App\View;
 
 class UserController
 {
-    function all(): void
+    public function all(): void
     {
         $_GET["users"] = User::getUsers();
+
+        View::render('app/views/user.php');
     }
 
-    function add(): void
+    public function showUpdate(): void
+    {
+        View::render('app/views/updateForm.php');
+    }
+
+    public function add(): void
     {
         if (isset($_POST)) {
             $email = $_POST["email"];
@@ -31,7 +39,7 @@ class UserController
         header("Location: /");
     }
 
-    function delete(): void
+    public function delete(): void
     {
         if (isset($_POST["deleteEmail"])) {
             $email = $_POST["deleteEmail"];
@@ -41,7 +49,7 @@ class UserController
         header("Location: /");
     }
 
-    function update(): void
+    public function update(): void
     {
         if (isset($_POST)) {
             $oldEmail = $_POST["oldEmail"];

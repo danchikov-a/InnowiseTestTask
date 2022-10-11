@@ -1,7 +1,7 @@
 <?php
 
 namespace src;
-include __DIR__ . "/../../config/config.php";
+include __DIR__ . "/../../config/apiMessages.php";
 
 use App\Controllers\UserController;
 use PHPUnit\Framework\TestCase;

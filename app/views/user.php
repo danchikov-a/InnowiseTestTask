@@ -2,9 +2,9 @@
 namespace App\Views;
 ?>
 
-<?php include dirname(__DIR__, 2) . "/public/templates/header.html" ?>
+<?php include "header.php" ?>
 
-<form class="user-form" action="/index.php?controller=UserController&action=add" method="post">
+<form class="user-form" action="/add" method="post">
     <caption>User form</caption>
     <div class="form-group form-element">
         <label>First and last name</label>
@@ -43,8 +43,8 @@ namespace App\Views;
     <caption>User list</caption>
     <thead class="thead-dark">
     <tr>
-        <th scope="col">Email</th>
         <th scope="col">Name</th>
+        <th scope="col">Email</th>
         <th scope="col">Gender</th>
         <th scope="col">Status</th>
         <th scope="col">Update</th>
@@ -52,35 +52,34 @@ namespace App\Views;
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <?php
 
-        foreach ($_GET["users"] as $user): ?>
-
-        <td><?php echo $user->Name ?></td>
-        <td><?php echo $user->Email ?></td>
-        <td><?php echo $user->Gender ?></td>
-        <td><?php echo $user->Status ?></td>
-        <td>
-            <form action="updateForm" method="post">
-                <input name="updateName" value="<?php echo $user->Name ?>" hidden>
-                <input name="updateEmail" value="<?php echo $user->Email ?>" hidden>
-                <input name="updateGender" value="<?php echo $user->Gender ?>" hidden>
-                <input name="updateStatus" value="<?php echo $user->Status ?>" hidden>
-                <button class="btn btn-outline-dark">Update</button>
-            </form>
-        </td>
-        <td>
-            <form action="/index.php?controller=UserController&action=delete" method="post" onclick="return deleteConfirmation()">
-                <input name="deleteEmail" value="<?php echo $user->Email ?>" hidden>
-                <button class="btn btn btn-outline-danger" id="deleteButton">Delete</button>
-            </form>
-        </td>
-    </tr>
+    <?php foreach ($_GET["users"] as $user): ?>
+        <tr>
+            <td><?= $user->Name ?></td>
+            <td><?= $user->Email ?></td>
+            <td><?= $user->Gender ?></td>
+            <td><?= $user->Status ?></td>
+            <td>
+                <form action="/updateForm" method="post">
+                    <input name="updateName" value="<?= $user->Name ?>" hidden>
+                    <input name="updateEmail" value="<?= $user->Email ?>" hidden>
+                    <input name="updateGender" value="<?= $user->Gender ?>" hidden>
+                    <input name="updateStatus" value="<?= $user->Status ?>" hidden>
+                    <button class="btn btn-outline-dark">Update</button>
+                </form>
+            </td>
+            <td>
+                <form action="/delete" method="post"
+                      onclick="return deleteConfirmation()">
+                    <input name="deleteEmail" value="<?= $user->Email ?>" hidden>
+                    <button class="btn btn btn-outline-danger" id="deleteButton">Delete</button>
+                </form>
+            </td>
+        </tr>
     <?php endforeach; ?>
 
     </tbody>
 </table>
-<?php include dirname(__DIR__, 2) . "/public/templates/footer.html" ?>
+<?php include "footer.php" ?>
 
 <script type="text/javascript" src="/js/confirm-delete.js"></script>
