@@ -15,5 +15,6 @@ return [
         '/login' => ["UserController", "showLogin"],
         '/checkUser' => ["UserController", "checkUser"],
         '/welcome' => ["UserController", "showWelcome"],
+        '/logout' => ["UserController", "logout"],
     ]
 ];

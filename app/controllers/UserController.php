@@ -94,12 +94,18 @@ class UserController
 
             if (User::checkUser($name, $email, $password)) {
                 unset($_SESSION['loginError']);
-                setcookie("userName", $name);
+                setcookie("userName", $name, time() + 3600);
                 header("Location: /welcome");
             } else {
                 $_SESSION['loginError'] = true;
                 header("Location: /login");
             }
         }
+    }
+
+    public function logout(): void
+    {
+        setcookie("userName", "", time() - 3600);
+        header("Location: /login");
     }
 }
