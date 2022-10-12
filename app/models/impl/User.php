@@ -9,7 +9,8 @@ use App\Models\Model;
 
 class User extends Model implements IUser
 {
-    public function __construct(private string $name, private string $email, private Gender $gender, private Status $status)
+    public function __construct(private string $name, private string $email,
+                                private Gender $gender, private Status $status, private string $password)
     {
     }
 
@@ -27,10 +28,12 @@ class User extends Model implements IUser
             $name = $user->getName();
             $gender = $user->getGender()->value;
             $status = $user->getStatus()->value;
+            $password = md5($user->getPassword());
 
-            $insertStatement = $conn->prepare("INSERT INTO Users(Email, Name, Gender, Status)
-                                                            VALUES (:email, :name, :gender, :status)");
-            $insertStatement->execute(['email' => $email, 'name' => $name, 'gender' => $gender, 'status' => $status]);
+            $insertStatement = $conn->prepare("INSERT INTO Users(Email, Name, Gender, Status, Password)
+                                                            VALUES (:email, :name, :gender, :status, :password)");
+            $insertStatement->execute(['email' => $email, 'name' => $name, 'gender' => $gender, 'status' => $status,
+                'password' => $password]);
 
             return true;
         } else {
@@ -53,7 +56,8 @@ class User extends Model implements IUser
             $status = $user->getStatus()->value;
 
             $insertStatement = $conn->prepare("UPDATE Users 
-                    SET Email = :email, Name = :name, Gender = :gender, Status = :status WHERE Email = :oldEmail");
+                    SET Email = :email, Name = :name, Gender = :gender, Status = :status, Password = Password 
+                    WHERE Email = :oldEmail");
             $insertStatement->execute(['email' => $email, 'name' => $name,
                 'gender' => $gender, 'status' => $status, 'oldEmail' => $oldEmail]);
 
@@ -80,7 +84,7 @@ class User extends Model implements IUser
         $userList = [];
         $users = $conn->query("SELECT * from Users");
 
-        while ($row = $users->fetchObject(__CLASS__, ['email', 'name', GENDER::MALE, STATUS::ACTIVE])) {
+        while ($row = $users->fetchObject(__CLASS__, ['email', 'name', GENDER::MALE, STATUS::ACTIVE, 'password'])) {
             $userList[] = $row;
         }
 
@@ -100,6 +104,16 @@ class User extends Model implements IUser
         } else {
             return false;
         }
+    }
+
+    public static function checkUser(string $name, string $email, string $password): bool
+    {
+        $conn = static::getDB();
+
+        $selectStatement = $conn->prepare("SELECT * FROM Users WHERE Email = :email AND Name = :name AND Password = :password");
+        $selectStatement->execute(['email' => $email, 'name' => $name, 'password' => md5($password)]);
+
+        return $selectStatement->rowCount() == 1;
     }
 
     /**
@@ -166,4 +180,11 @@ class User extends Model implements IUser
         $this->status = $status;
     }
 
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
 }

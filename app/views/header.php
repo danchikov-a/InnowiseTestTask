@@ -15,8 +15,9 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item active">
                         <a class="nav-link" aria-current="page" href="/">Home</a>
+                        <a class="nav-link" aria-current="page" href="/register">Registration</a>
+                        <a class="nav-link" aria-current="page" href="/login">Login</a>
                     </li>
-
                 </ul>
             </div>
         </div>

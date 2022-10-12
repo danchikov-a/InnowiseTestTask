@@ -11,5 +11,9 @@ return [
         '/updateForm' => ["UserController", "showUpdate"],
         '/file' => ["FileController", "all"],
         '/create' => ["FileController", "create"],
+        '/register' => ["UserController", "showRegistration"],
+        '/login' => ["UserController", "showLogin"],
+        '/checkUser' => ["UserController", "checkUser"],
+        '/welcome' => ["UserController", "showWelcome"],
     ]
 ];

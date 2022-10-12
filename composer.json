@@ -16,6 +16,7 @@
   },
   "require": {
     "ext-pdo": "*",
-    "vlucas/phpdotenv": "*"
+    "vlucas/phpdotenv": "*",
+    "ext-openssl": "*"
   }
 }

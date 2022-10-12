@@ -21,15 +21,31 @@ class UserController
         View::render('app/views/updateForm.php');
     }
 
+    public function showRegistration(): void
+    {
+        View::render('app/views/registrationForm.php');
+    }
+
+    public function showLogin(): void
+    {
+        View::render('app/views/loginForm.php');
+    }
+
+    public function showWelcome(): void
+    {
+        View::render('app/views/welcome.php');
+    }
+
     public function add(): void
     {
         if (isset($_POST)) {
             $email = $_POST["email"];
             $name = $_POST["name"];
             $gender = Gender::from($_POST["gender"]);
-            $status = Status::from($_POST["status"]);
+            $status = isset($_POST["status"]) ? Status::from($_POST["status"]) : Status::ACTIVE;
+            $password = $_POST["password"];
 
-            if (User::save(new User($name, $email, $gender, $status))) {
+            if (User::save(new User($name, $email, $gender, $status, $password))) {
                 unset($_SESSION["email_error"]);
             } else {
                 $_SESSION["email_error"] = true;
@@ -59,7 +75,7 @@ class UserController
             $gender = Gender::from($_POST["gender"]);
             $status = Status::from($_POST["status"]);
 
-            if (User::update($oldEmail, new User($name, $email, $gender, $status))) {
+            if (User::update($oldEmail, new User($name, $email, $gender, $status, ""))) {
                 unset($_SESSION["email_error"]);
             } else {
                 $_SESSION["email_error"] = true;
@@ -67,5 +83,23 @@ class UserController
         }
 
         header("Location: /");
+    }
+
+    public function checkUser(): void
+    {
+        if (isset($_POST)) {
+            $name = $_POST["name"];
+            $email = $_POST["email"];
+            $password = $_POST["password"];
+
+            if (User::checkUser($name, $email, $password)) {
+                unset($_SESSION['loginError']);
+                setcookie("userName", $name);
+                header("Location: /welcome");
+            } else {
+                $_SESSION['loginError'] = true;
+                header("Location: /login");
+            }
+        }
     }
 }
