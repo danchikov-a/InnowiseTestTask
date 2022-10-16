@@ -4,5 +4,5 @@ namespace App\Models;
 
 interface ILogger
 {
-    public static function writeLog($message): void;
+    public static function writeLog($message, $fileName);
 }

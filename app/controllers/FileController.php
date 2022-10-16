@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Impl\File;
-use App\Models\Impl\Logger;
+use App\Models\Impl\UploadFilesLogger;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -47,7 +47,7 @@ class FileController
 
         $formattedString = sprintf("%s %s %s %s",
             $loggerMessage, $uploadingFile["name"], $uploadingFile["size"], date('d-m-y h:i:s'));
-        Logger::writeLog($formattedString);
+        UploadFilesLogger::writeLog($formattedString);
 
         header("Location: /file");
     }
