@@ -13,21 +13,22 @@ class UserController
 {
     private const COOKIE_LIFETIME = 3600;
     private const LOGIN_ATTEMPTS = 3;
-    private const USERNAME_COOKIE = "userName";
+    private const USER_ID_COOKIE = "userId";
 
     public function all(): void
     {
-        if (!isset($_COOKIE[self::USERNAME_COOKIE])) {
-            header("Location: /login");
-        }
 
-        $_GET["users"] = User::getUsers();
+        $user = new User("", "", Gender::MALE, Status::ACTIVE, "");
+        $_GET["users"] = $user->show();
 
         View::render('app/views/user.php');
     }
 
-    public function showUpdate(): void
+    public function showUpdate(int $id): void
     {
+        $user = new User("", "", Gender::MALE, Status::ACTIVE, "");
+        $_GET["user"] = $user->index($id);
+
         View::render('app/views/updateForm.php');
     }
 
@@ -52,9 +53,6 @@ class UserController
 
     public function showWelcome(): void
     {
-        if (!isset($_COOKIE[self::USERNAME_COOKIE])) {
-            header("Location: /login");
-        }
 
         View::render('app/views/welcome.php');
     }
@@ -66,9 +64,11 @@ class UserController
             $name = $_POST["name"];
             $gender = Gender::from($_POST["gender"]);
             $status = isset($_POST["status"]) ? Status::from($_POST["status"]) : Status::ACTIVE;
-            $password = $_POST["password"];
+            $password = $_POST["password"] ?? "";
 
-            if (User::save(new User($name, $email, $gender, $status, $password))) {
+            $user = new User($name, $email, $gender, $status, $password);
+
+            if ($user->store()) {
                 unset($_SESSION["email_error"]);
             } else {
                 $_SESSION["email_error"] = true;
@@ -78,31 +78,27 @@ class UserController
         header("Location: /");
     }
 
-    public function delete(): void
+    public function delete(int $id): void
     {
-        if (isset($_POST["deleteEmail"])) {
-            $email = $_POST["deleteEmail"];
-            User::delete($email);
-        }
+        $user = new User("", "", Gender::MALE, Status::ACTIVE, "");
+        $user->destroy($id);
 
         header("Location: /");
     }
 
-    public function update(): void
+    public function update(int $id): void
     {
-        if (isset($_POST)) {
-            $oldEmail = $_POST["oldEmail"];
+        $name = $_POST["name"];
+        $email = $_POST["email"];
+        $gender = Gender::from($_POST["gender"]);
+        $status = Status::from($_POST["status"]);
 
-            $name = $_POST["name"];
-            $email = $_POST["email"];
-            $gender = Gender::from($_POST["gender"]);
-            $status = Status::from($_POST["status"]);
+        $user = new User($name, $email, $gender, $status, "");
 
-            if (User::update($oldEmail, new User($name, $email, $gender, $status, ""))) {
-                unset($_SESSION["email_error"]);
-            } else {
-                $_SESSION["email_error"] = true;
-            }
+        if ($user->update($id)) {
+            unset($_SESSION["email_error"]);
+        } else {
+            $_SESSION["email_error"] = true;
         }
 
         header("Location: /");
@@ -114,10 +110,12 @@ class UserController
             $name = $_POST["name"];
             $email = $_POST["email"];
             $password = $_POST["password"];
+            $user = new User($name, $email, Gender::MALE, Status::ACTIVE, $password);
 
-            if (User::checkUser($name, $email, $password)) {
+            if ($user->checkUser()) {
                 unset($_SESSION['loginError']);
-                setcookie("userName", $name, time() + self::COOKIE_LIFETIME);
+                $id = $user->getIdByEmail($email);
+                setcookie(self::USER_ID_COOKIE, $id, time() + self::COOKIE_LIFETIME);
                 header("Location: /welcome");
             } else {
                 $_SESSION['loginError'] = true;
@@ -155,7 +153,7 @@ class UserController
 
     public function logout(): void
     {
-        setcookie("userName", "", time() - self::COOKIE_LIFETIME);
+        setcookie(self::USER_ID_COOKIE, "", time() - self::COOKIE_LIFETIME);
         header("Location: /login");
     }
 }

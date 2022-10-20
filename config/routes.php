@@ -1,20 +1,19 @@
 <?php
-$_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__, 2);
 
 return [
     'routes' => [
-        '/' => ["UserController", "all"],
-        '/user' => ["UserController", "all"],
+        '/' => ["UserController", "all", "auth"],
+        '/user' => ["UserController", "all", "auth"],
         '/add' => ["UserController", "add"],
-        '/delete' => ["UserController", "delete"],
-        '/update' => ["UserController", "update"],
-        '/updateForm' => ["UserController", "showUpdate"],
-        '/file' => ["FileController", "all"],
-        '/create' => ["FileController", "create"],
+        '/delete/{id}' => ["UserController", "delete", "auth"],
+        '/update/{id}' => ["UserController", "update", "auth"],
+        '/updateForm/{id}' => ["UserController", "showUpdate", "auth"],
+        '/file' => ["FileController", "all", "auth"],
+        '/create' => ["FileController", "create", "auth"],
         '/register' => ["UserController", "showRegistration"],
         '/login' => ["UserController", "showLogin"],
         '/checkUser' => ["UserController", "checkUser"],
-        '/welcome' => ["UserController", "showWelcome"],
-        '/logout' => ["UserController", "logout"],
+        '/welcome' => ["UserController", "showWelcome", "auth"],
+        '/logout' => ["UserController", "logout", "auth"],
     ]
 ];

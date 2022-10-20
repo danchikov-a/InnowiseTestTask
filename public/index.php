@@ -4,6 +4,8 @@ use App\Router;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
+$_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__, 2);
+
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
