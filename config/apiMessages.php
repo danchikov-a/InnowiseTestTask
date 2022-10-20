@@ -1,5 +1,4 @@
 <?php
-$_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__, 2);
 
 return [
     'api' => [

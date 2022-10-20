@@ -4,116 +4,39 @@ namespace App\Models\Impl;
 
 use App\Enums\Gender;
 use App\Enums\Status;
-use App\Models\IUser;
-use App\Models\Model;
+use App\Models\BaseModel;
 
-class User extends Model implements IUser
+class User extends BaseModel
 {
     public function __construct(private string $name, private string $email,
                                 private Gender $gender, private Status $status, private string $password)
     {
+        parent::__construct();
+
+        $this->table = "Users";
+        $this->className = __CLASS__;
+
+        $this->fields["Name"] = $this->name;
+        $this->fields["Email"] = $this->email;
+        $this->fields["Gender"] = $this->gender->value;
+        $this->fields["Status"] = $this->status->value;
+        $this->fields["Password"] = md5($this->password);
     }
 
-    public static function save(User $user): bool
+    public function checkUser(): bool
     {
-        $conn = static::getDB();
-
-        $email = $user->getEmail();
-        $selectStatement = $conn->prepare("SELECT * FROM Users WHERE Email = :email");
-        $selectStatement->execute(['email' => $email]);
-
-        $rowsAmount = $selectStatement->rowCount();
-
-        if ($rowsAmount == 0) {
-            $name = $user->getName();
-            $gender = $user->getGender()->value;
-            $status = $user->getStatus()->value;
-            $password = md5($user->getPassword());
-
-            $insertStatement = $conn->prepare("INSERT INTO Users(Email, Name, Gender, Status, Password)
-                                                            VALUES (:email, :name, :gender, :status, :password)");
-            $insertStatement->execute(['email' => $email, 'name' => $name, 'gender' => $gender, 'status' => $status,
-                'password' => $password]);
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static function update(string $oldEmail, User $user): bool
-    {
-        $conn = static::getDB();
-
-        $email = $user->getEmail();
-        $selectStatement = $conn->prepare("SELECT * FROM Users WHERE Email = :email");
-        $rowsAmount = $selectStatement->rowCount();
-
-        if ($rowsAmount == 0) {
-            $selectStatement->execute(['email' => $email]);
-            $name = $user->getName();
-            $gender = $user->getGender()->value;
-            $status = $user->getStatus()->value;
-
-            $insertStatement = $conn->prepare("UPDATE Users 
-                    SET Email = :email, Name = :name, Gender = :gender, Status = :status, Password = Password 
-                    WHERE Email = :oldEmail");
-            $insertStatement->execute(['email' => $email, 'name' => $name,
-                'gender' => $gender, 'status' => $status, 'oldEmail' => $oldEmail]);
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static function delete(string $email): bool
-    {
-        $conn = static::getDB();
-
-        $deleteStatement = $conn->prepare("DELETE FROM Users WHERE Email = :email");
-        $deleteStatement->execute(['email' => $email]);
-
-        return $deleteStatement->rowCount() > 0;
-    }
-
-    public static function getUsers(): array
-    {
-        $conn = static::getDB();
-
-        $userList = [];
-        $users = $conn->query("SELECT * from Users");
-
-        while ($row = $users->fetchObject(__CLASS__, ['email', 'name', GENDER::MALE, STATUS::ACTIVE, 'password'])) {
-            $userList[] = $row;
-        }
-
-        return $userList;
-    }
-
-    public static function getUser(string $email): User|false
-    {
-        $conn = static::getDB();
-
-        $selectStatement = $conn->prepare("SELECT * FROM Users WHERE Email = :email");
-        $selectStatement->execute(['email' => $email]);
-        $obj = $selectStatement->fetchObject(__CLASS__, ['email', 'name', GENDER::MALE, STATUS::ACTIVE]);
-
-        if ($selectStatement->rowCount() == 1) {
-            return $obj;
-        } else {
-            return false;
-        }
-    }
-
-    public static function checkUser(string $name, string $email, string $password): bool
-    {
-        $conn = static::getDB();
-
-        $selectStatement = $conn->prepare("SELECT * FROM Users WHERE Email = :email AND Name = :name AND Password = :password");
-        $selectStatement->execute(['email' => $email, 'name' => $name, 'password' => md5($password)]);
+        $selectStatement = $this->conn->prepare("SELECT * FROM Users WHERE Email = :email AND Name = :name AND Password = :password");
+        $selectStatement->execute(['email' => $this->email, 'name' => $this->name, 'password' => md5($this->password)]);
 
         return $selectStatement->rowCount() == 1;
+    }
+
+    public function getIdByEmail(string $email): int
+    {
+        $selectStatement = $this->conn->prepare("SELECT Id FROM Users WHERE Email = :email");
+        $selectStatement->execute(['email' => $this->email]);
+
+        return $selectStatement->fetch()["Id"];
     }
 
     /**

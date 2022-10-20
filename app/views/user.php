@@ -55,25 +55,16 @@ namespace App\Views;
 
     <?php foreach ($_GET["users"] as $user): ?>
         <tr>
-            <td><?= $user->Name ?></td>
-            <td><?= $user->Email ?></td>
-            <td><?= $user->Gender ?></td>
-            <td><?= $user->Status ?></td>
+            <td><?= $user["Name"] ?></td>
+            <td><?= $user["Email"] ?></td>
+            <td><?= $user["Gender"] ?></td>
+            <td><?= $user["Status"] ?></td>
             <td>
-                <form action="/updateForm" method="post">
-                    <input name="updateName" value="<?= $user->Name ?>" hidden>
-                    <input name="updateEmail" value="<?= $user->Email ?>" hidden>
-                    <input name="updateGender" value="<?= $user->Gender ?>" hidden>
-                    <input name="updateStatus" value="<?= $user->Status ?>" hidden>
-                    <button class="btn btn-outline-dark">Update</button>
-                </form>
+                <a class="btn btn-outline-dark" href="/updateForm/<?= $user["Id"] ?>">Update</a>
             </td>
             <td>
-                <form action="/delete" method="post"
-                      onclick="return deleteConfirmation()">
-                    <input name="deleteEmail" value="<?= $user->Email ?>" hidden>
-                    <button class="btn btn btn-outline-danger" id="deleteButton">Delete</button>
-                </form>
+                <a class="btn btn btn-outline-danger"
+                   href="/delete/<?= $user["Id"] ?>" onclick="return deleteConfirmation()">Delete</a>
             </td>
         </tr>
     <?php endforeach; ?>
