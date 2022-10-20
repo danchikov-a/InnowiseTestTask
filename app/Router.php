@@ -54,32 +54,21 @@ class Router
                 if (class_exists($class) && method_exists($class, $action)) {
                     $controller = new $class;
 
-                    if (isset($routeAttributes[self::IS_NEED_AUTH])) {
-                        if (!isset($_COOKIE[self::USER_ID_COOKIE])) {
-                            header("Location: /login");
-                            http_response_code(403);
-                        } else {
-                            if (count($params) == 2) {
-                                $controller->{$action}($params[2]);
-                            } else {
-                                $controller->{$action}();
-                            }
-                        }
+                    $isAuth = isset($_COOKIE[self::USER_ID_COOKIE]);
+                    $isPathNeedAuth = isset($routeAttributes[self::IS_NEED_AUTH]);
+
+                    if ($isPathNeedAuth && !$isAuth) {
+                        header("Location: /login");
+                    } else if (!$isPathNeedAuth && $isAuth) {
+                        header("Location: /");
                     } else {
-                        if (!isset($_COOKIE[self::USER_ID_COOKIE])) {
-                            if (count($params) == 2) {
-                                $controller->{$action}($params[2]);
-                            } else {
-                                $controller->{$action}();
-                            }
+                        if (count($params) == 2) {
+                            $controller->{$action}($params[self::ID_PARAM]);
                         } else {
-                            header("Location: /");
-                            http_response_code(403);
+                            $controller->{$action}();
                         }
                     }
                 }
-
-
             } else {
                 View::render('app/views/404.php');
             }
