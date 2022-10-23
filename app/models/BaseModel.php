@@ -2,99 +2,76 @@
 
 namespace App\Models;
 
-use PDO;
-use PDOException;
-
 abstract class BaseModel implements IModel
 {
-    protected PDO $conn;
-    protected array $fields;
-    protected string $table;
-    protected string $className;
+    protected static DB $db;
 
     public function __construct()
     {
-        $this->conn = DB::getDB();
+        self::$db = DB::getInstance();
     }
 
-    public function store(): bool
+    public function store(array $data): bool
     {
-        $tableColumns = [];
-        $dataToSave = [];
+        $columns = [];
+        $paramsNames = [];
 
-        foreach ($this->fields as $name => $value) {
-            $tableColumns[] = $name;
-            $dataToSave[':' . lcfirst($name)] = $value;
+        foreach ($data as $columnName => $value) {
+            $columns[] = $columnName;
+            $paramsNames[':' . $columnName] = "'$value'";
         }
 
         $sql = sprintf("INSERT INTO %s (%s) VALUES (%s);",
-            $this->table, implode(',', $tableColumns), implode(',', array_keys($dataToSave)));
+            static::getTableName(), implode(',', $columns), implode(',', array_keys($paramsNames)));
 
-        $insertStatement = $this->conn->prepare($sql);
-
-        try {
-            $insertStatement->execute($dataToSave);
-
-            return true;
-        } catch (PDOException) {
-            return false;
-        }
+        return self::$db->changeRecord($sql, $data);
     }
 
     public function destroy(int $id): bool
     {
-        $sql = sprintf("DELETE FROM %s WHERE :id=id", $this->table);
-
-        $deleteStatement = $this->conn->prepare($sql);
-        $deleteStatement->execute([':id' => $id]);
-
-        return $deleteStatement->rowCount() > 0;
+        return self::$db->changeRecord(
+            sprintf("DELETE FROM %s WHERE id = :id", static::getTableName()),
+            [':id' => $id]
+        );
     }
 
-    public function update(int $id): bool
+    public static function checkEmailExistence(string $email): array|false
     {
-        $dataToUpdate = [];
-        $params = [];
-
-        foreach ($this->fields as $name => $value) {
-            $param = lcfirst($name);
-            $dataToUpdate[] = "$name = :$param";
-            $params[':' . lcfirst($name)] = $value;
-        }
-
-        $params[':id'] = $id;
-        $sql = sprintf("UPDATE %s SET %s WHERE Id=:id", $this->table, implode(',', $dataToUpdate));
-
-        $insertStatement = $this->conn->prepare($sql);
-
-        try {
-            $insertStatement->execute($params);
-
-            return true;
-        } catch (PDOException) {
-            return false;
-        }
+        return self::$db->getRecord(
+            sprintf("SELECT * FROM %s WHERE `email` = :email", static::getTableName()),
+            ['email' => $email]
+        );
     }
 
-    public function show(): array
+    public function update(array $data): bool
     {
-        $users = $this->conn->query("SELECT * from $this->table");
+        $columnParams = [];
+        $paramsValues = [];
 
-        return $users->fetchAll();
+        foreach ($data as $columnName => $value) {
+            $columnParams[] = "$columnName = '$value'";
+        }
+
+        $sql = sprintf("UPDATE %s SET %s WHERE id = %s",
+            static::getTableName(), implode(', ', $columnParams), $data['id']);
+
+        return self::$db->changeRecord($sql, $paramsValues);
     }
 
-    public function index(int $id): object|bool
+    public function showAll(): array
     {
-        $selectStatement = $this->conn->prepare("SELECT * FROM Users WHERE Id = :id");
+        return self::$db->query(sprintf("SELECT * FROM %s;",
+            static::getTableName()), [], static::class);
+    }
 
-        $selectStatement->execute(['id' => $id]);
+    public function index(int $id): self|null
+    {
+        $entities = self::$db->query(
+            sprintf("SELECT * FROM %s WHERE id=:id;", static::getTableName()),
+            [':id' => $id],
+            static::class
+        );
 
-        $obj = $selectStatement->fetchObject();
-
-        if ($obj) {
-            return $obj;
-        } else {
-            return false;
-        }
+        return $entities ? $entities[0] : null;
     }
 }

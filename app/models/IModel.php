@@ -4,9 +4,9 @@ namespace App\Models;
 
 interface IModel
 {
-    public function store(): bool;
+    public function store(array $data): bool;
     public function destroy(int $id): bool;
-    public function update(int $id): bool;
-    public function show(): array;
-    public function index(int $id): object|bool;
+    public function update(array $data): bool;
+    public function showAll(): array;
+    public function index(int $id): object|null;
 }

@@ -2,76 +2,76 @@
 
 namespace App;
 
-use App\Api\Impl\UserApi;
-
 class Router
 {
     private const CONTROLLER = 0;
     private const ACTION = 1;
     private const CONFIG_PATH = '/config/routes.php';
     private const ID_PARAM = 2;
-    private const USER_ID_COOKIE = "userId";
-    private const IS_NEED_AUTH = 2;
 
     private mixed $config;
     private array $routes;
 
+    private array $params = [];
+
     public function __construct()
     {
         $this->config = require dirname(__DIR__) . self::CONFIG_PATH;
-        $this->routes = $this->config['routes'];
+        $this->routes = $this->config;
     }
 
     public function run(string $requestUri): void
     {
         $params = array_filter(explode("/", $requestUri));
 
-        if (isset($params[1]) && $params[1] == 'api') {
-            if (isset($params[3]) && $params[3] == 'users') {
-                $api = new UserApi();
-                $api->response();
-            } else {
-                View::render('app/views/404.php');
+        $this->changeRoutes($params);
+        $route = $this->isThereSuchRoute($requestUri);
+
+        if ($route) {
+            $class = $route[self::CONTROLLER];
+            $action = $route[self::ACTION];
+
+            if (class_exists($class) && method_exists($class, $action)) {
+                $controller = new $class;
+
+                if (count($this->params) == 0) {
+                    $controller->{$action}();
+                } else {
+                    $controller->{$action}($this->params["id"]);
+                }
             }
         } else {
-            if (count($params) == 2) {
-                foreach ($this->routes as $name => $value) {
-                    if (str_contains($name, '{id}')) {
-                        $this->routes[str_replace('{id}', $params[self::ID_PARAM], $name)] = $value;
-                        unset($this->routes[$name]);
+            View::render('app/views/404.php');
+        }
+    }
+
+    private function changeRoutes(array $params): void
+    {
+        foreach ($this->routes as $requestMethod => $route) {
+            foreach ($route as $url => $controllerAndAction) {
+                if (str_contains($url, '{id}')) {
+                    if (isset($params[self::ID_PARAM])) {
+                        $this->params["id"] = $params[self::ID_PARAM];
+
+                        $url = str_replace('{id}', $params[self::ID_PARAM], $url);
+                        $this->routes[$requestMethod][$url] = $controllerAndAction;
+                        unset($this->routes[$url]);
                     }
                 }
-            }
-
-            if (isset($this->routes[$requestUri])) {
-                $routeAttributes = $this->routes[$requestUri];
-
-                $controllerName = $routeAttributes[self::CONTROLLER];
-                $action = $routeAttributes[self::ACTION];
-
-                $class = '\App\Controllers\\' . $controllerName;
-
-                if (class_exists($class) && method_exists($class, $action)) {
-                    $controller = new $class;
-
-                    $isAuth = isset($_COOKIE[self::USER_ID_COOKIE]);
-                    $isPathNeedAuth = isset($routeAttributes[self::IS_NEED_AUTH]);
-
-                    if ($isPathNeedAuth && !$isAuth) {
-                        header("Location: /login");
-                    } else if (!$isPathNeedAuth && $isAuth) {
-                        header("Location: /");
-                    } else {
-                        if (count($params) == 2) {
-                            $controller->{$action}($params[self::ID_PARAM]);
-                        } else {
-                            $controller->{$action}();
-                        }
-                    }
-                }
-            } else {
-                View::render('app/views/404.php');
             }
         }
+    }
+
+    private function isThereSuchRoute(string $requestUri): array|false
+    {
+        foreach ($this->routes as $requestMethod => $route) {
+            foreach ($route as $url => $controllerAndAction) {
+                if ($requestUri == $url) {
+                    return $this->routes[$requestMethod][$url];
+                }
+            }
+        }
+
+        return false;
     }
 }

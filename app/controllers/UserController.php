@@ -4,32 +4,36 @@ namespace App\Controllers;
 
 use App\Enums\Gender;
 use App\Enums\Status;
-use App\Models\Impl\BlockingInformationLogger;
 use App\Models\Impl\User;
-use App\Models\Impl\UserSessionInformation;
+use App\Validator\UserValidator;
 use App\View;
 
 class UserController
 {
     private const COOKIE_LIFETIME = 3600;
-    private const LOGIN_ATTEMPTS = 3;
-    private const USER_ID_COOKIE = "userId";
+    private const USER_NAME_COOKIE = "userName";
+
+    private User $user;
+    private UserValidator $validator;
+
+    public function __construct()
+    {
+        $this->user = new User();
+        $this->validator = new UserValidator();
+    }
 
     public function all(): void
     {
+        $users = $this->user->showAll();
 
-        $user = new User("", "", Gender::MALE, Status::ACTIVE, "");
-        $_GET["users"] = $user->show();
-
-        View::render('app/views/user.php');
+        View::render('app/views/user.php', ['users' => $users]);
     }
 
     public function showUpdate(int $id): void
     {
-        $user = new User("", "", Gender::MALE, Status::ACTIVE, "");
-        $_GET["user"] = $user->index($id);
+        $userById = $this->user->index($id);
 
-        View::render('app/views/updateForm.php');
+        View::render('app/views/updateForm.php', ['user' => $userById]);
     }
 
     public function showRegistration(): void
@@ -53,25 +57,26 @@ class UserController
 
     public function showWelcome(): void
     {
-
         View::render('app/views/welcome.php');
     }
 
     public function add(): void
     {
         if (isset($_POST)) {
-            $email = $_POST["email"];
-            $name = $_POST["name"];
-            $gender = Gender::from($_POST["gender"]);
-            $status = isset($_POST["status"]) ? Status::from($_POST["status"]) : Status::ACTIVE;
-            $password = $_POST["password"] ?? "";
+            $postParams = [
+                'name' => $_POST["name"],
+                'email' => $_POST["email"],
+                'gender' => $_POST["gender"],
+                'status' => $_POST["status"] ?? Status::ACTIVE->value,
+                'password' => $_POST["password"] ?? ""
+            ];
 
-            $user = new User($name, $email, $gender, $status, $password);
-
-            if ($user->store()) {
+            if ($this->validator->isValidUser($postParams)) {
+                $this->user->store($postParams);
                 unset($_SESSION["email_error"]);
             } else {
-                $_SESSION["email_error"] = true;
+                $errors = $this->validator->getErrors();
+                $_SESSION["email_error"] = $errors["email"];
             }
         }
 
@@ -80,8 +85,7 @@ class UserController
 
     public function delete(int $id): void
     {
-        $user = new User("", "", Gender::MALE, Status::ACTIVE, "");
-        $user->destroy($id);
+        $this->user->destroy($id);
 
         header("Location: /");
     }
@@ -90,12 +94,10 @@ class UserController
     {
         $name = $_POST["name"];
         $email = $_POST["email"];
-        $gender = Gender::from($_POST["gender"]);
-        $status = Status::from($_POST["status"]);
+        $gender = $_POST["gender"];
+        $status = $_POST["status"];
 
-        $user = new User($name, $email, $gender, $status, "");
-
-        if ($user->update($id)) {
+        if ($this->user->update(['name' => $name, 'email' => $email, 'gender' => $gender, 'status' => $status, 'id' => $id])) {
             unset($_SESSION["email_error"]);
         } else {
             $_SESSION["email_error"] = true;
@@ -114,46 +116,18 @@ class UserController
 
             if ($user->checkUser()) {
                 unset($_SESSION['loginError']);
-                $id = $user->getIdByEmail($email);
-                setcookie(self::USER_ID_COOKIE, $id, time() + self::COOKIE_LIFETIME);
+                setcookie(self::USER_NAME_COOKIE, $user->getName(), time() + self::COOKIE_LIFETIME);
                 header("Location: /welcome");
             } else {
                 $_SESSION['loginError'] = true;
-                $ip = $_SERVER['REMOTE_ADDR'];
-
-                if (isset($_SESSION[$ip])) {
-                    $userSessionInformation = $_SESSION[$ip];
-
-                    if ($userSessionInformation->getAttempts() == self::LOGIN_ATTEMPTS - 1) {
-                        $_SESSION['authenticateError'] = true;
-                        $blockTime = time();
-
-                        $userSessionInformation->setBlockTime($blockTime);
-
-                        $logMessage = sprintf("%s %s %s", $ip, date('m/d/Y H:i:s', $blockTime),
-                            date('m/d/Y H:i:s', $userSessionInformation::BLOCK_DURATION + $blockTime));
-
-                        BlockingInformationLogger::writeLog($logMessage);
-                    } else {
-                        $userSessionInformation->addAttempt();
-                    }
-                } else {
-                    $userSessionInformation = new UserSessionInformation();
-
-                    $userSessionInformation->setIp($ip);
-                    $userSessionInformation->setAttempts(1);
-                }
-
-                $_SESSION[$ip] = $userSessionInformation;
-
-                header("Location: /login");
+                header("Location: /block");
             }
         }
     }
 
     public function logout(): void
     {
-        setcookie(self::USER_ID_COOKIE, "", time() - self::COOKIE_LIFETIME);
+        setcookie(self::USER_NAME_COOKIE, "", time() - self::COOKIE_LIFETIME);
         header("Location: /login");
     }
 }
