@@ -2,8 +2,6 @@
 
 namespace App\Validator;
 
-use App\Models\Impl\User;
-
 class BaseValidator
 {
     protected array $errors = [];
@@ -23,17 +21,6 @@ class BaseValidator
     {
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
             $this->errors[$field] = 'Not valid mail';
-
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function isEmailUnique(string $field, string $value): bool
-    {
-        if (User::checkEmailExistence($value)) {
-            $this->errors[$field] = 'Such email exists';
 
             return false;
         }

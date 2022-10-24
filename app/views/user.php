@@ -12,9 +12,7 @@ namespace App\Views;
     </div>
     <div class="form-group form-element">
         <label>Email</label>
-        <?php
-
-        if (isset($_SESSION['email_error'])):?>
+        <?php if (isset($_SESSION['email_error'])):?>
             <div style="color:red">Not unique email</div>
         <?php endif ?>
         <input id="email" name="email" type="email" required>
@@ -53,18 +51,18 @@ namespace App\Views;
     </thead>
     <tbody>
 
-    <?php foreach ($_GET["users"] as $user): ?>
+    <?php foreach ($users as $user): ?>
         <tr>
-            <td><?= $user["Name"] ?></td>
-            <td><?= $user["Email"] ?></td>
-            <td><?= $user["Gender"] ?></td>
-            <td><?= $user["Status"] ?></td>
+            <td><?= $user->getName() ?></td>
+            <td><?= $user->getEmail() ?></td>
+            <td><?= $user->getGender() ?></td>
+            <td><?= $user->getStatus() ?></td>
             <td>
-                <a class="btn btn-outline-dark" href="/updateForm/<?= $user["Id"] ?>">Update</a>
+                <a class="btn btn-outline-dark" href="/updateForm/<?= $user->getId() ?>">Update</a>
             </td>
             <td>
                 <a class="btn btn btn-outline-danger"
-                   href="/delete/<?= $user["Id"] ?>" onclick="return deleteConfirmation()">Delete</a>
+                   href="/delete/<?= $user->getId() ?>" onclick="return deleteConfirmation()">Delete</a>
             </td>
         </tr>
     <?php endforeach; ?>

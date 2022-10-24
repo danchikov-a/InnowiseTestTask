@@ -4,7 +4,7 @@ namespace App\Views;
 
 <?php include "header.php"; ?>
 
-<form class="user-form" action="/add" method="post">
+<form class="user-form" action="/register" method="post">
     <caption>Register form</caption>
     <div class="form-group form-element">
         <label>First and last name</label>

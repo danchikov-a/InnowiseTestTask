@@ -13,7 +13,7 @@
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarExample01">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 list-group-horizontal">
-                    <?php if (isset($_COOKIE["userId"])): ?>
+                    <?php if (isset($_COOKIE["userName"])): ?>
                         <li class="nav-item active">
                             <a class="nav-link" aria-current="page" href="/">Main page</a>
                         </li>
@@ -28,7 +28,7 @@
                         </li>
                     <?php else: ?>
                         <li class="nav-item active">
-                            <a class="nav-link" aria-current="page" href="/register">Registration</a>
+                            <a class="nav-link" aria-current="page" href="/registration">Registration</a>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" aria-current="page" href="/login">Login</a>

@@ -17,6 +17,14 @@ class User extends BaseModel
         return 'Users';
     }
 
+    public function isUserEnteredRightCredentials(array $inputData): array|false
+    {
+        return self::$db->getRecord(
+            sprintf("SELECT * FROM %s WHERE `email` = :email AND `name` = :name AND `password` = :password",
+                static::getTableName()), ['email' => $inputData["email"], 'name' => $inputData["name"], 'password' => $inputData["password"]]
+        );
+    }
+
     /**
      * @return int
      */

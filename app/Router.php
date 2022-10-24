@@ -6,7 +6,8 @@ class Router
 {
     private const CONTROLLER = 0;
     private const ACTION = 1;
-    private const CONFIG_PATH = '/config/routes.php';
+    private const MIDDLEWARE = 2;
+    private const CONFIG_ROUTES_PATH = '/config/routes.php';
     private const ID_PARAM = 2;
 
     private mixed $config;
@@ -16,8 +17,7 @@ class Router
 
     public function __construct()
     {
-        $this->config = require dirname(__DIR__) . self::CONFIG_PATH;
-        $this->routes = $this->config;
+        $this->routes = require dirname(__DIR__) . self::CONFIG_ROUTES_PATH;
     }
 
     public function run(string $requestUri): void
@@ -33,6 +33,13 @@ class Router
 
             if (class_exists($class) && method_exists($class, $action)) {
                 $controller = new $class;
+
+                if (isset($route[self::MIDDLEWARE])) {
+                    foreach ($route[self::MIDDLEWARE] as $middlewareClass) {
+                        $middlewareClass = new $middlewareClass;
+                        $middlewareClass->handle($requestUri);
+                    }
+                }
 
                 if (count($this->params) == 0) {
                     $controller->{$action}();
