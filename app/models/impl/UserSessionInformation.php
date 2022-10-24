@@ -2,24 +2,56 @@
 
 namespace App\Models\Impl;
 
-use http\Exception\InvalidArgumentException;
+use App\Models\BaseModel;
 
-class UserSessionInformation
+class UserSessionInformation extends BaseModel
 {
+    private int $id;
     private string $ip;
     private int $attempts;
     private int $blockTime;
 
-    public const BLOCK_DURATION = 10;
-
-    public function checkBlockTime(): bool
+    public function getByIp(string $ip): self|null
     {
-        return time() - $this->blockTime > self::BLOCK_DURATION;
+        $entities = self::$db->query(
+            sprintf("SELECT * FROM %s WHERE `ip` = :ip", static::getTableName()),
+            ['ip' => $ip],
+            static::class
+        );
+
+        return $entities ? $entities[0] : null;
     }
 
-    public function addAttempt(): void
+    /**
+     * @return string
+     */
+    public function getIp(): string
     {
-        $this->attempts++;
+        return $this->ip;
+    }
+
+    /**
+     * @param string $ip
+     */
+    public function setIp(string $ip): void
+    {
+        $this->ip = $ip;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAttempts(): int
+    {
+        return $this->attempts;
+    }
+
+    /**
+     * @param int $attempts
+     */
+    public function setAttempts(int $attempts): void
+    {
+        $this->attempts = $attempts;
     }
 
     /**
@@ -38,43 +70,24 @@ class UserSessionInformation
         $this->blockTime = $blockTime;
     }
 
-    /**
-     * @return int
-     */
-    public function getIp(): int
+    protected static function getTableName(): string
     {
-        return $this->ip;
-    }
-
-    /**
-     * @param string $ip
-     */
-    public function setIp(string $ip): void
-    {
-        if (filter_var($ip, FILTER_VALIDATE_IP)) {
-            $this->ip = $ip;
-        } else {
-            throw new InvalidArgumentException();
-        }
+        return "UserSessionInformation";
     }
 
     /**
      * @return int
      */
-    public function getAttempts(): int
+    public function getId(): int
     {
-        return $this->attempts;
+        return $this->id;
     }
 
     /**
-     * @param int $attempts
+     * @param int $id
      */
-    public function setAttempts(int $attempts): void
+    public function setId(int $id): void
     {
-        if ($attempts > 0) {
-            $this->attempts = $attempts;
-        } else {
-            throw new InvalidArgumentException();
-        }
+        $this->id = $id;
     }
 }
