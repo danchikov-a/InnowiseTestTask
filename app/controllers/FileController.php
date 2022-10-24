@@ -2,67 +2,50 @@
 
 namespace App\Controllers;
 
+use App\File\FileSystemClass;
 use App\Models\Impl\File;
 use App\Models\Impl\UploadFilesLogger;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use App\Validator\FileValidator;
 use App\View;
 
-class FileController
+class FileController extends BaseController
 {
-    private const STORAGE_CAPACITY_BYTES = 7168;
+    private File $file;
+    private FileSystemClass $fileSystemClass;
+    private FileValidator $fileValidator;
+    private UploadFilesLogger $uploadFilesLogger;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->file = new File();
+        $this->fileValidator = new FileValidator();
+        $this->fileSystemClass = new FileSystemClass($this->fileValidator);
+        $this->uploadFilesLogger = new UploadFilesLogger();
+    }
 
     public function all(): void
     {
-        $path = realpath(dirname(__DIR__, 2) . $_ENV['FILE_UPLOAD_DIRECTORY']);
+        $files = $this->fileSystemClass->getAllFiles($this->file->showAll());
 
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
-            $fileSize = filesize($object);
-            $fileName = basename($object);
-
-            $_GET["files"][] = new File($fileName, $fileSize);
-        }
-
-        View::render('app/views/fileUploadForm.php');
+        View::render('app/views/fileUploadForm.php', ['files' => $files]);
     }
 
-    public function create(): void
+    public function add(): void
     {
-        $uploadingFile = $_FILES["file"];
-        $directory = dirname(__DIR__, 2) . $_ENV['FILE_UPLOAD_DIRECTORY'];
-        @mkdir($directory, 777);
-        $file = $directory . basename($uploadingFile["name"]);
+        $postParams = [
+            'filePath' => basename($_FILES["file"]["name"]),
+        ];
 
-        $currentDirectorySize = $this->getDirectorySize($directory);
-
-        if ($currentDirectorySize + $uploadingFile["size"] < self::STORAGE_CAPACITY_BYTES) {
-            move_uploaded_file($uploadingFile["tmp_name"], $file);
-            unset($_SESSION['file_error']);
-            $loggerMessage = "SUCCESS: file was uploaded.";
+        if ($this->fileSystemClass->uploadFile($_FILES["file"])) {
+            $this->file->store($postParams);
+            $this->session->unsetValidationError('file_error');
+            $this->response->sendResponse(200, "/file");
         } else {
-            $_SESSION['file_error'] = true;
-            $loggerMessage = "ERROR: not enough space.";
+            $this->session->setValidationError('file_error', $this->fileValidator->getErrors()["file"]);
+            $this->response->sendResponse(409, "/file");
         }
 
-        $formattedString = sprintf("%s %s %s %s",
-            $loggerMessage, $uploadingFile["name"], $uploadingFile["size"], date('d-m-y h:i:s'));
-        UploadFilesLogger::writeLog($formattedString);
-
-        header("Location: /file");
-    }
-
-    private function getDirectorySize(string $path): int
-    {
-        $totalBytes = 0;
-        $path = realpath($path);
-
-        if ($path !== false && $path != '' && file_exists($path)) {
-            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
-                $totalBytes += $object->getSize();
-            }
-        }
-
-        return $totalBytes;
+        $this->response->redirect("/file");
     }
 }

@@ -14,7 +14,8 @@
       "App\\Controllers\\Api\\V1\\Impl\\" : "app/controllers/api/v1/impl",
       "App\\Api\\Impl\\" : "app/controllers/api/v1/impl",
       "App\\Validator\\" : "app/validator",
-      "App\\Middleware\\" : "app/middleware"
+      "App\\Middleware\\" : "app/middleware",
+      "App\\File\\" : "app/file"
     }
   },
   "require": {

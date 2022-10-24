@@ -33,7 +33,7 @@ namespace App\Views;
     </thead>
     <tbody>
 
-    <?php foreach ($_GET["files"] as $file): ?>
+    <?php foreach ($files as $file): ?>
         <tr>
             <td><?= $file->getFileName() ?></td>
             <td><?= $file->getFileSize() ?></td>

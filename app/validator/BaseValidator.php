@@ -17,17 +17,6 @@ class BaseValidator
         return true;
     }
 
-    protected function isValidEmail(string $field, string $value): bool
-    {
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            $this->errors[$field] = 'Not valid mail';
-
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * @return array
      */

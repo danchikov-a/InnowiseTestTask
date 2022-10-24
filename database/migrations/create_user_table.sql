@@ -1,10 +1,10 @@
 CREATE TABLE Users
 (
-    Id int NOT NULL AUTO_INCREMENT,
-    Email  varchar(255) unique,
-    Name   varchar(255),
-    Password   varchar(255),
-    Gender Enum('male', 'female'),
-    Status Enum('active', 'inactive'),
-    PRIMARY KEY (Id)
+    id int NOT NULL AUTO_INCREMENT,
+    email  varchar(255) unique,
+    name   varchar(255),
+    password   varchar(255),
+    gender Enum('male', 'female'),
+    status Enum('active', 'inactive'),
+    PRIMARY KEY (id)
 );

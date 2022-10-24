@@ -17,7 +17,7 @@ return [
 
     'post' => [
         '/register' => [App\Controllers\UserController::class, "add"],
-        '/create' => [App\Controllers\FileController::class, "create", [App\Middleware\CheckAuthUserMiddleware::class]],
+        '/create' => [App\Controllers\FileController::class, "add", [App\Middleware\CheckAuthUserMiddleware::class]],
         '/add' => [App\Controllers\UserController::class, "add", [App\Middleware\CheckAuthUserMiddleware::class]],
     ],
 

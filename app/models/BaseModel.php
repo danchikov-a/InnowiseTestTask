@@ -74,4 +74,6 @@ abstract class BaseModel implements IModel
 
         return $entities ? $entities[0] : null;
     }
+
+    abstract protected static function getTableName(): string;
 }
