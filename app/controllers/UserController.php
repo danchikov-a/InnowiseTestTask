@@ -5,21 +5,24 @@ namespace App\Controllers;
 use App\Enums\Gender;
 use App\Enums\Status;
 use App\Models\Impl\User;
+use App\Response;
+use App\Session;
 use App\Validator\UserValidator;
 use App\View;
 
 class UserController
 {
-    private const COOKIE_LIFETIME = 3600;
-    private const USER_NAME_COOKIE = "userName";
-
     private User $user;
     private UserValidator $validator;
+    private Response $response;
+    private Session $session;
 
     public function __construct()
     {
         $this->user = new User();
         $this->validator = new UserValidator();
+        $this->response = new Response();
+        $this->session = new Session();
     }
 
     public function all(): void
@@ -62,72 +65,71 @@ class UserController
 
     public function add(): void
     {
-        if (isset($_POST)) {
-            $postParams = [
-                'name' => $_POST["name"],
-                'email' => $_POST["email"],
-                'gender' => $_POST["gender"],
-                'status' => $_POST["status"] ?? Status::ACTIVE->value,
-                'password' => $_POST["password"] ?? ""
-            ];
+        $postParams = [
+            'name' => $_POST["name"],
+            'email' => $_POST["email"],
+            'gender' => $_POST["gender"],
+            'status' => $_POST["status"] ?? Status::ACTIVE->value,
+            'password' => $_POST["password"] ?? ""
+        ];
 
-            if ($this->validator->isValidUser($postParams)) {
-                $this->user->store($postParams);
-                unset($_SESSION["email_error"]);
-            } else {
-                $errors = $this->validator->getErrors();
-                $_SESSION["email_error"] = $errors["email"];
-            }
+        if ($this->validator->isValidUser($postParams)) {
+            $this->user->store($postParams);
+            $this->session->unsetValidationError("email_error");
+            $this->response->sendResponse(200, "/");
+        } else {
+            $errors = $this->validator->getErrors();
+            $this->session->setValidationError("email_error", $errors["email"]);
+            $this->response->sendResponse(409, "/");
         }
 
-        header("Location: /");
+        $this->response->redirect("/");
     }
 
     public function delete(int $id): void
     {
-        $this->user->destroy($id);
+        if ($this->user->destroy($id)) {
+            $this->response->sendResponse(200, "/");
+        } else {
+            $this->response->sendResponse(409, "/");
+        }
 
-        header("Location: /");
+        $this->response->redirect("/");
     }
 
     public function update(int $id): void
     {
-        $name = $_POST["name"];
-        $email = $_POST["email"];
-        $gender = $_POST["gender"];
-        $status = $_POST["status"];
+        $putParams = [
+            'name' => $_POST["name"],
+            'email' => $_POST["email"],
+            'gender' => $_POST["gender"],
+            'status' => $_POST["status"],
+            'id' => $id,
+        ];
 
-        if ($this->user->update(['name' => $name, 'email' => $email, 'gender' => $gender, 'status' => $status, 'id' => $id])) {
-            unset($_SESSION["email_error"]);
+        if ($this->validator->isValidUser($putParams)) {
+            $this->user->update($putParams);
+            $this->session->unsetValidationError("email_error");
+            $this->response->sendResponse(200, "/");
         } else {
-            $_SESSION["email_error"] = true;
+            $errors = $this->validator->getErrors();
+            $this->session->setValidationError("email_error", $errors["email"]);
+            $this->response->sendResponse(409, "/");
         }
 
-        header("Location: /");
+        $this->response->redirect("/");
     }
 
-    public function checkUser(): void
+    /*public function checkUser(): void
     {
-        if (isset($_POST)) {
-            $name = $_POST["name"];
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-            $user = new User($name, $email, Gender::MALE, Status::ACTIVE, $password);
+        $postParams = ['name' => $_POST["name"], 'email' => $_POST["email"], 'password' => $_POST["password"]];
 
-            if ($user->checkUser()) {
-                unset($_SESSION['loginError']);
-                setcookie(self::USER_NAME_COOKIE, $user->getName(), time() + self::COOKIE_LIFETIME);
-                header("Location: /welcome");
-            } else {
-                $_SESSION['loginError'] = true;
-                header("Location: /block");
-            }
-        }
+        CheckAuthUser::handle($postParams);
     }
 
     public function logout(): void
     {
         setcookie(self::USER_NAME_COOKIE, "", time() - self::COOKIE_LIFETIME);
         header("Location: /login");
-    }
+    }*/
 }
