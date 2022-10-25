@@ -13,7 +13,6 @@ class FileController extends BaseController
     private File $file;
     private FileSystemClass $fileSystemClass;
     private FileValidator $fileValidator;
-    private UploadFilesLogger $uploadFilesLogger;
 
     public function __construct()
     {
@@ -21,7 +20,6 @@ class FileController extends BaseController
         $this->file = new File();
         $this->fileValidator = new FileValidator();
         $this->fileSystemClass = new FileSystemClass($this->fileValidator);
-        $this->uploadFilesLogger = new UploadFilesLogger();
     }
 
     public function all(): void
@@ -41,9 +39,23 @@ class FileController extends BaseController
             $this->file->store($postParams);
             $this->session->unsetValidationError('file_error');
             $this->response->sendResponse(200, "/file");
+
+            UploadFilesLogger::writeLog(sprintf("%s %s %s %s",
+                "SUCCESS: file was uploaded.",
+                $_FILES["file"]["name"],
+                $_FILES["file"]["size"],
+                date('d-m-y h:i:s')
+            ));
         } else {
             $this->session->setValidationError('file_error', $this->fileValidator->getErrors()["file"]);
             $this->response->sendResponse(409, "/file");
+
+            UploadFilesLogger::writeLog(sprintf("%s %s %s %s",
+                "ERROR: not enough space.",
+                $_FILES["file"]["name"],
+                $_FILES["file"]["size"],
+                date('d-m-y h:i:s')
+            ));
         }
 
         $this->response->redirect("/file");

@@ -3,12 +3,7 @@
 namespace App\File;
 
 use App\Models\Impl\File;
-use App\Models\Impl\UploadFilesLogger;
-use App\Session;
 use App\Validator\FileValidator;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 class FileSystemClass
 {
@@ -44,25 +39,10 @@ class FileSystemClass
 
         if ($this->fileValidator->isValidFile(["path" => $this->uploadPath, "uploadingFile" => $uploadingFile])) {
             move_uploaded_file($uploadingFile["tmp_name"], $file);
+
             return true;
         } else {
             return false;
         }
-
-        /* if ($currentDirectorySize + $uploadingFile["size"] < self::STORAGE_CAPACITY_BYTES) {
-             move_uploaded_file($uploadingFile["tmp_name"], $file);
-             unset($_SESSION['file_error']);
-             $loggerMessage = "SUCCESS: file was uploaded.";
-         } else {
-             $_SESSION['file_error'] = true;
-             $loggerMessage = "ERROR: not enough space.";
-         }
-
-         $formattedString = sprintf("%s %s %s %s",
-             $loggerMessage, $uploadingFile["name"], $uploadingFile["size"], date('d-m-y h:i:s'));
-         UploadFilesLogger::writeLog($formattedString);*/
-        //header("Location: /file");
     }
-
-
 }

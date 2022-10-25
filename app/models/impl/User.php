@@ -3,8 +3,9 @@
 namespace App\Models\Impl;
 
 use App\Models\BaseModel;
+use JsonSerializable;
 
-class User extends BaseModel
+class User extends BaseModel implements JsonSerializable
 {
     private int $id;
     private string $email;
@@ -103,5 +104,10 @@ class User extends BaseModel
     public function setStatus(string $status): void
     {
         $this->status = $status;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return get_object_vars($this);
     }
 }

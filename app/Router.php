@@ -8,9 +8,7 @@ class Router
     private const ACTION = 1;
     private const MIDDLEWARE = 2;
     private const CONFIG_ROUTES_PATH = '/config/routes.php';
-    private const ID_PARAM = 2;
 
-    private mixed $config;
     private array $routes;
 
     private array $params = [];
@@ -54,14 +52,22 @@ class Router
 
     private function changeRoutes(array $params): void
     {
+        $idParam = 0;
+
+        foreach ($params as $index => $param) {
+            if (is_numeric($param)) {
+                $idParam = $index;
+            }
+        }
+
         foreach ($this->routes as $requestMethod => $route) {
             foreach ($route as $url => $controllerAndAction) {
                 if (str_contains($url, '{id}')) {
-                    if (isset($params[self::ID_PARAM])) {
-                        $this->params["id"] = $params[self::ID_PARAM];
-
-                        $url = str_replace('{id}', $params[self::ID_PARAM], $url);
+                    if (isset($params[$idParam])) {
+                        $this->params["id"] = $params[$idParam];
+                        $url = str_replace('{id}', $params[$idParam], $url);
                         $this->routes[$requestMethod][$url] = $controllerAndAction;
+
                         unset($this->routes[$url]);
                     }
                 }
@@ -73,7 +79,7 @@ class Router
     {
         foreach ($this->routes as $requestMethod => $route) {
             foreach ($route as $url => $controllerAndAction) {
-                if ($requestUri == $url) {
+                if ($requestUri == $url && $_SERVER["REQUEST_METHOD"] == $requestMethod) {
                     return $this->routes[$requestMethod][$url];
                 }
             }

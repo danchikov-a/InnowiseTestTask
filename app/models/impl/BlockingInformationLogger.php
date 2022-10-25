@@ -2,10 +2,12 @@
 
 namespace App\Models\Impl;
 
+use App\Models\BaseLogger;
+
 class BlockingInformationLogger
 {
     public static function writeLog($message): void
     {
-        Logger::writeLog($message, "blockingAddresses.log");
+        BaseLogger::writeLog($message, "blockingAddresses.log");
     }
 }

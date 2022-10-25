@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Enums\Status;
 use App\Models\Impl\User;
+use App\Models\Impl\UserSessionInformation;
 use App\Validator\UserValidator;
 use App\View;
 
@@ -11,12 +12,15 @@ class UserController extends BaseController
 {
     private User $user;
     private UserValidator $validator;
+    private UserSessionInformation $userSessionInformation;
+    private const BLOCK_DURATION = 10;
 
     public function __construct()
     {
         parent::__construct();
         $this->user = new User();
         $this->validator = new UserValidator();
+        $this->userSessionInformation = new UserSessionInformation();
     }
 
     public function all(): void
@@ -40,13 +44,16 @@ class UserController extends BaseController
 
     public function showLogin(): void
     {
-        if (isset($_SESSION['authenticateError'])) {
-            $userSessionInformation = $_SESSION[$_SERVER["REMOTE_ADDR"]];
+        $userSessionInformation = $this->userSessionInformation->getByIp($_SERVER["REMOTE_ADDR"]);
 
-            if ($userSessionInformation->checkBlockTime()) {
-                unset($_SESSION[$_SERVER["REMOTE_ADDR"]]);
-                unset($_SESSION['authenticateError']);
+        if ($userSessionInformation) {
+            if ($userSessionInformation->getBlockTime() + self::BLOCK_DURATION < time()) {
+                $this->session->unsetValidationError('authenticateError');
+            } else {
+                $this->session->setValidationError('authenticateError', "authentication error");
             }
+        } else {
+            $this->session->unsetValidationError('authenticateError');
         }
 
         View::render('app/views/loginForm.php');

@@ -33,10 +33,10 @@ class UserSessionInformationController extends BaseController
 
                 $userSessionInformation->setBlockTime($blockTime);
 
-                /*$logMessage = sprintf("%s %s %s", $ip, date('m/d/Y H:i:s', $blockTime),
+                $logMessage = sprintf("%s %s %s", $ip, date('m/d/Y H:i:s', $blockTime),
                     date('m/d/Y H:i:s', self::BLOCK_DURATION + $blockTime));
 
-                BlockingInformationLogger::writeLog($logMessage);*/
+                BlockingInformationLogger::writeLog($logMessage);
             } else {
                 $attempts++;
                 $blockTime = 0;
