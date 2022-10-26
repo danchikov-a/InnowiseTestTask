@@ -2,20 +2,19 @@
 
 namespace App\Controllers;
 
-use App\Models\Impl\BlockingInformationLogger;
 use App\Models\Impl\UserSessionInformation;
+use App\Services\UserSessionInformationService;
 
 class UserSessionInformationController extends BaseController
 {
-    private const LOGIN_ATTEMPTS = 3;
-    private const BLOCK_DURATION = 10;
-
     private UserSessionInformation $userSessionInformation;
+    private UserSessionInformationService $userSessionInformationService;
 
     public function __construct()
     {
         parent::__construct();
         $this->userSessionInformation = new UserSessionInformation();
+        $this->userSessionInformationService = new UserSessionInformationService();
     }
 
     public function block(): void
@@ -25,24 +24,14 @@ class UserSessionInformationController extends BaseController
         $userSessionInformation = $this->userSessionInformation->getByIp($ip);
 
         if ($userSessionInformation) {
-            $attempts = $userSessionInformation->getAttempts();
+            $blockTimeAndAttempts = $this->userSessionInformationService->findBlockTimeAndAttempts($userSessionInformation);
 
-            if ($attempts == self::LOGIN_ATTEMPTS - 1) {
+            if ($blockTimeAndAttempts['blockTime'] != 0) {
                 $this->session->setValidationError('authenticateError', 'q');
-                $blockTime = time();
-
-                $userSessionInformation->setBlockTime($blockTime);
-
-                $logMessage = sprintf("%s %s %s", $ip, date('m/d/Y H:i:s', $blockTime),
-                    date('m/d/Y H:i:s', self::BLOCK_DURATION + $blockTime));
-
-                BlockingInformationLogger::writeLog($logMessage);
-            } else {
-                $attempts++;
-                $blockTime = 0;
             }
 
-            $this->userSessionInformation->update(['ip' => $ip, 'attempts' => $attempts, 'blockTime' => $blockTime, 'id' => $userSessionInformation->getId()]);
+            $this->userSessionInformation->update(['ip' => $ip, 'attempts' => $blockTimeAndAttempts['attempts'],
+                'blockTime' => $blockTimeAndAttempts['blockTime'], 'id' => $userSessionInformation->getId()]);
         } else {
             $this->userSessionInformation->store(['ip' => $ip, 'attempts' => 1, 'blockTime' => 0]);
         }

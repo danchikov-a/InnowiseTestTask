@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers\Api\V1\Impl;
+namespace App\Controllers\Api\V1;
 
-use App\Controllers\Api\V1\AbstractApi;
+use App\Controllers\Api\BaseApiController;
 use App\Models\Impl\User;
 
-class UserApi extends AbstractApi
+class UserApiController extends BaseApiController
 {
     private User $user;
 

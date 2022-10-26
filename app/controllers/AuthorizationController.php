@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Cookie;
 use App\Models\Impl\User;
 use App\Validator\UserValidator;
 

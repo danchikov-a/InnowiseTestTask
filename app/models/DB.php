@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use PDO;
+use PDOException;
 
 class DB
 {
@@ -41,7 +42,11 @@ class DB
 
     public function changeRecord(string $sql, array $values): bool
     {
-        return $this->pdo->prepare($sql)->execute($values);
+        try {
+           return $this->pdo->prepare($sql)->execute($values);
+        } catch (PDOException) {
+            return false;
+        }
     }
 
     public function getRecord(string $sql, array $values): array|false

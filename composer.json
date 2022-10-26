@@ -11,11 +11,10 @@
       "App\\Models\\Impl\\": "app/models/impl",
       "App\\Views\\" : "app/views",
       "App\\Controllers\\Api\\V1\\" : "app/controllers/api/v1",
-      "App\\Controllers\\Api\\V1\\Impl\\" : "app/controllers/api/v1/impl",
-      "App\\Api\\Impl\\" : "app/controllers/api/v1/impl",
       "App\\Validator\\" : "app/validator",
       "App\\Middleware\\" : "app/middleware",
-      "App\\File\\" : "app/file"
+      "App\\Services\\" : "app/services",
+      "App\\Controllers\\Api\\" : "app/controllers/api"
     }
   },
   "require": {

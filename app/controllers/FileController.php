@@ -2,16 +2,16 @@
 
 namespace App\Controllers;
 
-use App\File\FileSystemClass;
 use App\Models\Impl\File;
 use App\Models\Impl\UploadFilesLogger;
+use App\Services\FileManager;
 use App\Validator\FileValidator;
 use App\View;
 
 class FileController extends BaseController
 {
     private File $file;
-    private FileSystemClass $fileSystemClass;
+    private FileManager $fileManager;
     private FileValidator $fileValidator;
 
     public function __construct()
@@ -19,12 +19,12 @@ class FileController extends BaseController
         parent::__construct();
         $this->file = new File();
         $this->fileValidator = new FileValidator();
-        $this->fileSystemClass = new FileSystemClass($this->fileValidator);
+        $this->fileManager = new FileManager($this->fileValidator);
     }
 
     public function all(): void
     {
-        $files = $this->fileSystemClass->getAllFiles($this->file->showAll());
+        $files = $this->fileManager->getAllFiles($this->file->showAll());
 
         View::render('app/views/fileUploadForm.php', ['files' => $files]);
     }
@@ -35,7 +35,7 @@ class FileController extends BaseController
             'filePath' => basename($_FILES["file"]["name"]),
         ];
 
-        if ($this->fileSystemClass->uploadFile($_FILES["file"])) {
+        if ($this->fileManager->uploadFile($_FILES["file"])) {
             $this->file->store($postParams);
             $this->session->unsetValidationError('file_error');
             $this->response->sendResponse(200, "/file");

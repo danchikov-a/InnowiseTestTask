@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controllers\Api\V1;
+namespace App\Controllers\Api;
 
 use App\Response;
 
-abstract class AbstractApi
+abstract class BaseApiController
 {
     private const CONFIG_MESSAGE_PATH = '/config/apiMessages.php';
 

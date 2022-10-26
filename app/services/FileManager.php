@@ -1,11 +1,11 @@
 <?php
 
-namespace App\File;
+namespace App\Services;
 
 use App\Models\Impl\File;
 use App\Validator\FileValidator;
 
-class FileSystemClass
+class FileManager
 {
     private FileValidator $fileValidator;
     private string $uploadPath;
@@ -37,7 +37,7 @@ class FileSystemClass
         @mkdir($this->uploadPath, 777);
         $file = $this->uploadPath . basename($uploadingFile["name"]);
 
-        if ($this->fileValidator->isValidFile(["path" => $this->uploadPath, "uploadingFile" => $uploadingFile])) {
+        if ($this->fileValidator->validate(["path" => $this->uploadPath, "uploadingFile" => $uploadingFile])) {
             move_uploaded_file($uploadingFile["tmp_name"], $file);
 
             return true;

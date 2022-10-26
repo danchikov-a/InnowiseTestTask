@@ -74,7 +74,7 @@ class UserController extends BaseController
             'password' => $_POST["password"] ?? ""
         ];
 
-        if ($this->validator->isValidUser($postParams)) {
+        if ($this->validator->validate($postParams)) {
             $this->user->store($postParams);
             $this->session->unsetValidationError("email_error");
             $this->response->sendResponse(200, "/");
@@ -108,7 +108,7 @@ class UserController extends BaseController
             'id' => $id,
         ];
 
-        if ($this->validator->isValidUser($putParams)) {
+        if ($this->validator->validate($putParams)) {
             $this->user->update($putParams);
             $this->session->unsetValidationError("email_error");
             $this->response->sendResponse(200, "/");

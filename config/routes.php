@@ -11,8 +11,8 @@ return [
         '/welcome' => [App\Controllers\UserController::class, "showWelcome", [App\Middleware\CheckAuthUserMiddleware::class]],
         '/logout' => [App\Controllers\AuthorizationController::class, "logout", [App\Middleware\CheckAuthUserMiddleware::class]],
         '/block' => [App\Controllers\UserSessionInformationController::class, "block"],
-        '/api/v1/users' => [App\Controllers\Api\V1\Impl\UserApi::class, "getAll"],
-        '/api/v1/users/{id}' => [App\Controllers\Api\V1\Impl\UserApi::class, "get"],
+        '/api/v1/users' => [App\Controllers\Api\V1\Impl\UserApiController::class, "getAll"],
+        '/api/v1/users/{id}' => [App\Controllers\Api\V1\Impl\UserApiController::class, "get"],
         '/delete/{id}' => [App\Controllers\UserController::class, "delete", [App\Middleware\CheckAuthUserMiddleware::class]],
     ],
 
@@ -21,15 +21,15 @@ return [
         '/create' => [App\Controllers\FileController::class, "add", [App\Middleware\CheckAuthUserMiddleware::class]],
         '/add' => [App\Controllers\UserController::class, "add", [App\Middleware\CheckAuthUserMiddleware::class]],
         '/update/{id}' => [App\Controllers\UserController::class, "update", [App\Middleware\CheckAuthUserMiddleware::class]],
-        '/api/v1/users' => [App\Controllers\Api\V1\Impl\UserApi::class, "post"],
+        '/api/v1/users' => [App\Controllers\Api\V1\Impl\UserApiController::class, "post"],
         '/checkUser' => [App\Controllers\AuthorizationController::class, "checkUser"],
     ],
 
     'DELETE' => [
-        '/api/v1/users/{id}' => [App\Controllers\Api\V1\Impl\UserApi::class, "delete"],
+        '/api/v1/users/{id}' => [App\Controllers\Api\V1\Impl\UserApiController::class, "delete"],
     ],
 
     'PUT' => [
-        '/api/v1/users/{id}' => [App\Controllers\Api\V1\Impl\UserApi::class, "put"],
+        '/api/v1/users/{id}' => [App\Controllers\Api\V1\Impl\UserApiController::class, "put"],
     ]
 ];
