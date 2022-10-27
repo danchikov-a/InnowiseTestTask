@@ -39,11 +39,7 @@ class Router
                     }
                 }
 
-                if (count($this->params) == 0) {
-                    $controller->{$action}();
-                } else {
-                    $controller->{$action}($this->params["id"]);
-                }
+                call_user_func_array([new $controller, $action], $this->params);
             }
         } else {
             View::render('app/views/404.php');
@@ -52,24 +48,22 @@ class Router
 
     private function changeRoutes(array $params): void
     {
-        $idParam = 0;
-
-        foreach ($params as $index => $param) {
-            if (is_numeric($param)) {
-                $idParam = $index;
-            }
-        }
-
         foreach ($this->routes as $requestMethod => $route) {
             foreach ($route as $url => $controllerAndAction) {
-                if (str_contains($url, '{id}')) {
-                    if (isset($params[$idParam])) {
-                        $this->params["id"] = $params[$idParam];
-                        $url = str_replace('{id}', $params[$idParam], $url);
-                        $this->routes[$requestMethod][$url] = $controllerAndAction;
+                $currentUrlParams = array_filter(explode("/", $url));
 
-                        unset($this->routes[$url]);
+                if (count($currentUrlParams) == count($params) && $_SERVER["REQUEST_METHOD"] == $requestMethod) {
+                    foreach ($currentUrlParams as $index => $currentUrlParam) {
+                        if (preg_match("/\{\w+?}/", $currentUrlParam)) {
+                            $currentUrlParams[$index] = $params[$index];
+                            $this->params[$index] = $params[$index];
+                        }
                     }
+
+                    $url = "/" . implode("/", $currentUrlParams);
+                    $this->routes[$requestMethod][$url] = $controllerAndAction;
+
+                    unset($this->routes[$url]);
                 }
             }
         }
