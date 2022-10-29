@@ -27,7 +27,7 @@ class UserSessionInformationController extends BaseController
             $blockTimeAndAttempts = $this->userSessionInformationService->findBlockTimeAndAttempts($userSessionInformation);
 
             if ($blockTimeAndAttempts['blockTime'] != 0) {
-                $this->session->setValidationError('authenticateError', 'q');
+                $this->session->setValue('authenticateError', 'q');
             }
 
             $this->userSessionInformation->update(['ip' => $ip, 'attempts' => $blockTimeAndAttempts['attempts'],

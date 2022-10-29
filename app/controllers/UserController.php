@@ -48,12 +48,12 @@ class UserController extends BaseController
 
         if ($userSessionInformation) {
             if ($userSessionInformation->getBlockTime() + self::BLOCK_DURATION < time()) {
-                $this->session->unsetValidationError('authenticateError');
+                $this->session->unsetError('authenticateError');
             } else {
-                $this->session->setValidationError('authenticateError', "authentication error");
+                $this->session->setValue('authenticateError', "authentication error");
             }
         } else {
-            $this->session->unsetValidationError('authenticateError');
+            $this->session->unsetError('authenticateError');
         }
 
         View::render('app/views/loginForm.php');
@@ -76,11 +76,11 @@ class UserController extends BaseController
 
         if ($this->validator->validate($postParams)) {
             $this->user->store($postParams);
-            $this->session->unsetValidationError("email_error");
+            $this->session->unsetError("email_error");
             $this->response->sendResponse(200, "/");
         } else {
             $errors = $this->validator->getErrors();
-            $this->session->setValidationError("email_error", $errors["email"]);
+            $this->session->setValue("email_error", $errors["email"]);
             $this->response->sendResponse(409, "/");
         }
 
@@ -110,11 +110,11 @@ class UserController extends BaseController
 
         if ($this->validator->validate($putParams)) {
             $this->user->update($putParams);
-            $this->session->unsetValidationError("email_error");
+            $this->session->unsetError("email_error");
             $this->response->sendResponse(200, "/");
         } else {
             $errors = $this->validator->getErrors();
-            $this->session->setValidationError("email_error", $errors["email"]);
+            $this->session->setValue("email_error", $errors["email"]);
             $this->response->sendResponse(409, "/");
         }
 

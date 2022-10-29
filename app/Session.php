@@ -6,19 +6,29 @@ class Session
 {
     private bool $isSessionStarted = false;
 
-    public function setValidationError(string $errorName, string $error): void
+    public function setValue(string $name, mixed $value): void
     {
         if (!$this->isSessionStarted) {
             self::start();
         }
 
-        $_SESSION[$errorName] = $error;
+        $_SESSION[$name] = $value;
     }
 
-    public function unsetValidationError(string $errorName): void
+    public function unsetError(string $errorName): void
     {
-        unset($_SESSION["$errorName"]);
+        unset($_SESSION[$errorName]);
         session_destroy();
+    }
+
+    public function unsetValue(string $name): void
+    {
+        unset($_SESSION[$name]);
+    }
+
+    public function getValue(string $value): mixed
+    {
+        return $_SESSION[$value] ?? false;
     }
 
     public static function start(): void

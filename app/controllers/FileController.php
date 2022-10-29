@@ -37,7 +37,7 @@ class FileController extends BaseController
 
         if ($this->fileManager->uploadFile($_FILES["file"])) {
             $this->file->store($postParams);
-            $this->session->unsetValidationError('file_error');
+            $this->session->unsetError('file_error');
             $this->response->sendResponse(200, "/file");
 
             UploadFilesLogger::writeLog(sprintf("%s %s %s %s",
@@ -47,7 +47,7 @@ class FileController extends BaseController
                 date('d-m-y h:i:s')
             ));
         } else {
-            $this->session->setValidationError('file_error', $this->fileValidator->getErrors()["file"]);
+            $this->session->setValue('file_error', $this->fileValidator->getErrors()["file"]);
             $this->response->sendResponse(409, "/file");
 
             UploadFilesLogger::writeLog(sprintf("%s %s %s %s",
