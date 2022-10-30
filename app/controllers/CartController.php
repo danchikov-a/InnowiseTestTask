@@ -41,8 +41,10 @@ class CartController extends BaseController
         $cart = $this->session->getValue("cart");
         $products = [];
 
-        foreach ($cart as $id => $item) {
-            $products[] = $this->product->index($id);
+        if ($cart) {
+            foreach ($cart as $id => $item) {
+                $products[] = $this->product->index($id);
+            }
         }
 
         View::render("/app/views/cart.php", ['products' => $products, 'totalCost' => $this->cartService->total()]);

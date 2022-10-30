@@ -46,11 +46,13 @@ class CartService
         $cart = $this->session->getValue("cart");
         $totalCost = 0;
 
-        foreach ($cart as $productId => $services) {
-            $totalCost += $this->product->index($productId)->getCost();
+        if ($cart) {
+            foreach ($cart as $productId => $services) {
+                $totalCost += $this->product->index($productId)->getCost();
 
-            foreach ($services as $service) {
-                $totalCost += $this->service->getServiceByName($service)["cost"];
+                foreach ($services as $service) {
+                    $totalCost += $this->service->getServiceByName($service)["cost"];
+                }
             }
         }
 

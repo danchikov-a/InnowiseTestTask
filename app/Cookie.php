@@ -15,4 +15,9 @@ class Cookie
     {
         setcookie($cookieName, "", time() - self::COOKIE_LIFETIME);
     }
+
+    public function getCookie(string $cookieName): string
+    {
+        return $_COOKIE[$cookieName];
+    }
 }

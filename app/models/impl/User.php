@@ -26,6 +26,14 @@ class User extends BaseModel implements JsonSerializable
         );
     }
 
+    public function getIdByEmail(string $email): int
+    {
+        return self::$db->getRecord(
+            sprintf("SELECT id FROM %s WHERE `email` = :email",
+                static::getTableName()), ['email' => $email]
+        )["id"];
+    }
+
     /**
      * @return int
      */

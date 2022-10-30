@@ -31,6 +31,7 @@ return [
         '/products/{id}/services/delete/{id}' => [App\Controllers\ServiceController::class, "delete", [App\Middleware\CheckAuthUserMiddleware::class]],
         '/products/{id}/addToCart' => [App\Controllers\CartController::class, "addToCart", [App\Middleware\CheckAuthUserMiddleware::class]],
         '/cart/{id}/deleteFromCart' => [App\Controllers\CartController::class, "deleteFromCart", [App\Middleware\CheckAuthUserMiddleware::class]],
+        '/cart/checkout' => [App\Controllers\CheckoutController::class, "checkout", [App\Middleware\CheckAuthUserMiddleware::class]],
     ],
 
     'DELETE' => [

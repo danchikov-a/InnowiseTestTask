@@ -25,11 +25,15 @@ class AuthorizationController extends BaseController
 
         if ($this->user->isUserEnteredRightCredentials($postParams)) {
             $this->session->unsetError("loginError");
+
             $this->cookie->setCookie(self::USER_NAME_COOKIE, $_POST["name"]);
+            $this->cookie->setCookie("userId", $this->user->getIdByEmail($_POST["email"]));
+
             $this->response->sendResponse(200, "/welcome");
             $this->response->redirect("/welcome");
         } else {
             $this->session->setValue("loginError", "Wrong credentials");
+
             $this->response->sendResponse(401, "/login");
             $this->response->redirect("/block");
         }
